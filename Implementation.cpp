@@ -2,11 +2,12 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <string>
 #include "Interface.h"
 
 using namespace std;
 
-enum square_type
+/*enum square_type
 {
     nonAccessible,
     market,
@@ -19,7 +20,7 @@ enum next_move
     down,
     right_, //right and left are used in std namespace, so using them in this enum, would be ambiguous.
     left_
-};
+};*/
 
 // Class Item
 Item::Item(string _name, int _price, int _base_level)

@@ -1,7 +1,25 @@
+#include <string>
+#include <vector>
+
 using namespace std;
 
-enum next_move;
-enum square_type;
+//enum next_move;
+//enum square_type;
+
+enum square_type
+{
+    nonAccessible,
+    market,
+    common
+};
+
+enum next_move
+{
+    up,
+    down,
+    right_, //right and left are used in std namespace, so using them in this enum, would be ambiguous.
+    left_
+};
 
 class Item
 {
