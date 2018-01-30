@@ -20,7 +20,7 @@ enum next_move
     left_
 };
 
-enum ItemType
+/*enum ItemType
 {
 
 }
@@ -35,7 +35,7 @@ struct Armor {
     int price, base_level, dmg_reduction;
 }
 
-struct 
+struct */
 
 class Item
 {
@@ -96,9 +96,9 @@ class StrengthPotion : public Item
     {
         return boost;
     }
-    void use_the_potion(&Hero my_hero) {
+    /*void use_the_potion(&Hero my_hero) {
         my_hero.add_boost_to_strength(boost);
-    }
+    }*/
     ~StrengthPotion()
     {
         cout << "Hurray! You used all of the Strength Potion." << endl;
@@ -117,9 +117,9 @@ class DexterityPotion : public Item
     {
         return boost;
     }
-    void use_the_potion(&Hero my_hero) {
+    /*void use_the_potion(&Hero my_hero) {
         my_hero.add_boost_to_strength(boost);
-    }
+    }*/
     ~DexterityPotion()
     {
         cout << "Hurray! You used all of the Dexterity Potion." << endl;
@@ -138,9 +138,9 @@ class AgilityPotion : public Item
     {
         return boost;
     }
-    void use_the_potion(&Hero my_hero) {
+    /*void use_the_potion(&Hero my_hero) {
         my_hero.add_boost_to_strength(boost);
-    }
+    }*/
     ~AgilityPotion()
     {
         cout << "Hurray! You used all of the Agility Potion." << endl;
@@ -248,10 +248,10 @@ class Hero : public Living
     {
         dexterity = new_dexterity;
     }
-    void use_potion(Item *my_potion)
+    /*void use_potion(Item *my_potion)
     {
         my_potion->use_the_potion(this);
-    }
+    }*/
     void add_boost_to_strength(float boost)
     {
         strength += strength * boost;
@@ -462,6 +462,39 @@ class Grid
             cout << endl;
         }
     }
+    void displayMap()
+    {
+        cout << "Displaying the Map! :" << endl;
+        for (int i = 0; i < x * 2 + 1; i++)
+            cout << "-";
+        cout << endl;
+        for (int i = 0; i < x; i++)
+        {
+            cout << "|";
+            for (int j = 0; j < y; j++)
+            {
+                if (j > 0)
+                    cout << "-";
+                switch (my_grid[i][j])
+                {
+                case nonAccessible:
+                    cout << "n";
+                    break;
+                case market:
+                    cout << "m";
+                    break;
+                case common:
+                    cout << "c";
+                    break;
+                }
+            }
+            cout << "|";
+            cout << endl;
+        }
+        for (int i = 0; i < x * 2 + 1; i++)
+            cout << "-";
+        cout << endl;
+    }
     void move(next_move my_move)
     {
         switch (my_move)
@@ -496,6 +529,7 @@ int main()
 {
 
     Grid *my_grid = new Grid(4, 4, 3);
+    my_grid->displayMap();
     Hero* my_hero = new Warrior("picachu", 1,1,1,1,1,1,1,1);
     my_hero->LevelUp();
     return 0;

@@ -260,6 +260,7 @@ private:
 
 public:
   Grid(int _x, int _y, int _heroes_count);
+  void displayMap();
   void move(next_move my_move);
   ~Grid();
 };

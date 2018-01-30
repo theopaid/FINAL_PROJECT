@@ -288,6 +288,40 @@ Grid::Grid(int _x, int _y, int _heroes_count)
     }
 }
 
+void Grid::displayMap()
+{
+    cout << "Displaying the Map! :" << endl;
+    for (int i = 0; i < x * 2 + 1; i++)
+        cout << "-";
+    cout << endl;
+    for (int i = 0; i < x; i++)
+    {
+        cout << "|";
+        for (int j = 0; j < y; j++)
+        {
+            if (j > 0)
+                cout << "-";
+            switch (my_grid[i][j])
+            {
+            case nonAccessible:
+                cout << "n";
+                break;
+            case market:
+                cout << "m";
+                break;
+            case common:
+                cout << "c";
+                break;
+            }
+        }
+        cout << "|";
+        cout << endl;
+    }
+    for (int i = 0; i < x * 2 + 1; i++)
+        cout << "-";
+    cout << endl;
+}
+
 void Grid::move(next_move my_move)
 {
     switch (my_move)
