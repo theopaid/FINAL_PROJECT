@@ -120,6 +120,137 @@ LightingSpell::LightingSpell(string _name, int _price, int _base_level, int _dmg
 
 LightingSpell::~LightingSpell() {}
 
+//Class Living
+    Living::Living(string _name, int _level, int _healthPower)
+        : name(_name), level(_level), healthPower(_healthPower) {}
+
+    string Living::get_name() const{
+        return name;
+    }
+    
+	Living::~Living() {}
+	
+//Class Hero
+	Hero::Hero(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
+        : Living(_name, _level, _healthPower), magicPower(_magicPower), strength(_strength), dexterity(_dexterity), agility(_agility), money(_money), experience(_experience) {}
+    
+    float Hero::get_strength() const 
+    {
+        return strength;
+    }
+    void Hero::set_strength(float new_strength) 
+    {
+        strength = new_strength;
+    }
+    float Hero::get_agility() const
+    {
+        return agility;
+    }
+    void Hero::set_agility(float new_agility)  
+    {
+        agility = new_agility;
+    } 
+    float Hero::get_dexterity() const
+    {
+        return dexterity;
+    }
+    void Hero::set_dexterity(float new_dexterity) 
+    {
+        dexterity = new_dexterity;
+    }
+
+    Hero::~Hero() {}
+
+//Class Sorcerer
+Sorcerer::Sorcerer(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
+        : Hero(_name, _level, _healthPower, _magicPower, _strength, _dexterity, _agility, _money, _experience)
+    {
+        Hero::set_dexterity(Hero::get_dexterity() * (1 + dexterity_boost));
+        Hero::set_agility(Hero::get_agility() * (1 + agility_boost));
+    }
+    void Sorcerer::LevelUp()
+    {
+        strength = strength + strength * (5.0 / 100.0);
+        agility = agility + agility * (10.0 / 100.0);
+        dexterity = dexterity + dexterity * (15.0 / 100.0);
+    }
+
+    Sorcerer::~Sorcerer() {}
+    
+//Class Paladin
+	Paladin::Paladin(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
+        : Hero(_name, _level, _healthPower, _magicPower, _strength, _dexterity, _agility, _money, _experience)
+    {
+        Hero::set_strength(Hero::get_strength() * (1 + strength_boost));
+        Hero::set_dexterity(Hero::get_dexterity() * (1 + dexterity_boost));
+    }
+    void Paladin::LevelUp()
+    {
+        strength = strength + strength * (15.0 / 100.0);
+        agility = agility + agility * (5.0 / 100.0);
+        dexterity = dexterity + dexterity * (10.0 / 100.0);
+    }
+
+    Paladin::~Paladin() {}
+
+//Class Monster
+	Monster::Monster(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
+        : Living(_name, _level, _healthPower), damage_var(_damage_var), defense(_defense), dodge_possibility(_dodge_possibility) {}
+    int Monster::get_damage_var() const 
+    {
+        return damage_var;
+    }
+    void Monster::set_damage_var(int new_dmgvar)
+    {
+        damage_var = new_dmgvar;
+    }
+    int Monster::get_defense() const 
+    {
+        return defense;
+    }
+    void Monster::set_defense(int new_defence) 
+    {
+        defense = new_defence;
+    }
+    float Monster::get_dodge_possibility() const
+    {
+        return dodge_possibility;
+    }
+    void Monster::set_dodge_possibility(float new_dodgepos)
+    {
+        dodge_possibility = new_dodgepos;
+    }
+
+    Monster::~Monster() {}
+
+//Class Dragon
+    Dragon::Dragon(string _name, int _level, int _healthPower, int _damage_var, int _defense, int _dodge_possibility)
+        : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
+    {
+        Monster::set_damage_var(Monster::get_damage_var() * (1 + dmg_var_boost));
+    }
+
+    Dragon::~Dragon() {}
+
+
+//Class Exoskeleton
+    Exoskeleton::Exoskeleton(string _name, int _level, int _healthPower, int _damage_var, int _defense, int _dodge_possibility)
+        : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
+    {
+        Monster::set_defense(Monster::get_defense() * (1 + defense_boost));
+    }
+
+    Exoskeleton::~Exoskeleton() {}
+
+//Class Spirit
+    Spirit::Spirit(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
+        : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
+    {
+        Monster::set_dodge_possibility(Monster::get_dodge_possibility() * (1 + dodge_pos_boost));
+    }
+
+    Spirit::~Spirit() {}
+
 // Class Grid
 Grid::Grid(int _x, int _y, int _heroes_count)
     : x(_x), y(_y), heroes_count(_heroes_count), row(_x, common), my_grid(_y, row)
