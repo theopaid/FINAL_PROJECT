@@ -1,0 +1,15 @@
+Flame 10 1 20 15 10
+Torch 15 2 30 25 15
+Eruption 20 3 40 30 20
+Flare 25 4 50 35 25
+Blaze 30 5 60 40 30
+Inferno 10 1 20 15 10
+Fireball 15 2 30 25 15
+Explosion 20 3 40 30 20
+Meteor 25 4 50 35 25
+Salamander’s Blade 30 5 60 40 30
+Dragon Fire 10 1 20 15 10
+Sinkhole 15 2 30 25 15
+Pit 20 3 40 30 20
+Chasm 25 4 50 35 25
+Vine 30 5 60 40 30
