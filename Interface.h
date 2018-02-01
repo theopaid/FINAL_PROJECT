@@ -302,6 +302,8 @@ class Grid
     Grid(int _x, int _y, int _heroes_count);
     void displayMap();
     void move(next_move my_move);
+    void createMarket();
     void show_market();
+    void Menu();
     ~Grid();
 };

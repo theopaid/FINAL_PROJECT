@@ -8,7 +8,7 @@ Fireball 15 2 30 25 15
 Explosion 20 3 40 30 20
 Meteor 25 4 50 35 25
 Salamander’s_Blade 30 5 60 40 30
-Dragon Fire 10 1 20 15 10
+Dragon_Fire 10 1 20 15 10
 Sinkhole 15 2 30 25 15
 Pit 20 3 40 30 20
 Chasm 25 4 50 35 25
