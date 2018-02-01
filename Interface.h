@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -96,7 +97,7 @@ class StrengthPotion : public Item
   public:
     StrengthPotion(string _name, int _price, int _base_level, float _boost);
     float get_boost() const;
-    void use_the_potion(&Hero my_hero);
+    //void use_the_potion(&Hero my_hero);
     ~StrengthPotion();
 };
 
@@ -108,7 +109,7 @@ class DexterityPotion : public Item
   public:
     DexterityPotion(string _name, int _price, int _base_level, float _boost);
     float get_boost() const;
-    void use_the_potion(&Hero my_hero);
+    //void use_the_potion(&Hero my_hero);
     ~DexterityPotion();
 };
 
@@ -120,7 +121,7 @@ class AgilityPotion : public Item
   public:
     AgilityPotion(string _name, int _price, int _base_level, float _boost);
     float get_boost() const;
-    void use_the_potion(&Hero my_hero);
+    //void use_the_potion(&Hero my_hero);
     ~AgilityPotion();
 };
 
@@ -289,7 +290,7 @@ class Grid
   private:
     int x, y, heroes_count;
     vector<square_type> row;
-    vector<vector<square_type>> my_grid;
+    vector<vector<square_type> > my_grid;
     list<PotionsNode> PotionsList;
     list<SpellsNode> SpellsList;
     list<WeaponNode> WeaponList;
@@ -299,5 +300,6 @@ class Grid
     Grid(int _x, int _y, int _heroes_count);
     void displayMap();
     void move(next_move my_move);
+    void show_market();
     ~Grid();
 };
