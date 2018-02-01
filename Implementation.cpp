@@ -281,7 +281,7 @@ Grid::Grid(int _x, int _y, int _heroes_count)
         exit(1);
     }
     WeaponNode w_struct;
-    while (WeaponsFile >> w_struct.name >> w_struct.price >> w_struct.base_level >> w_struct.damage >> w_struct.hands)
+    while (WeaponsFile >> w_struct.name >> w_struct.price >> w_struct.base_level >> w_struct.damage >> w_struct.hands >> w_struct.can_be_sold)
         WeaponList.push_back(w_struct);
     WeaponsFile.close();
     // List of Armors
@@ -293,7 +293,7 @@ Grid::Grid(int _x, int _y, int _heroes_count)
         exit(1);
     }
     ArmorNode a_struct;
-    while (ArmorsFile >> a_struct.name >> a_struct.price >> a_struct.base_level >> a_struct.dmg_reduction)
+    while (ArmorsFile >> a_struct.name >> a_struct.price >> a_struct.base_level >> a_struct.dmg_reduction >> a_struct.can_be_sold)
         ArmorList.push_back(a_struct);
     ArmorsFile.close();
     // List of Potions
@@ -379,25 +379,29 @@ void Grid::show_market()
 {
     cout << "/////////////// MARKET ////////////////" << endl << endl;
     //Weapons
+    int j = 0;
     cout << "Weapons you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage || How many hands " << endl;
+    cout << " Name || Price || Level Requirement || Damage || How many hands || Can be Sold " << endl;
     for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
     {
-        cout << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << endl;
+        j++;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << "     ||     " << (*it).can_be_sold << endl;
     }
     cout << endl;
     //Armors
     cout << "Armors you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage Reduction " << endl;
+    cout << " Name || Price || Level Requirement || Damage Reduction || Can be Sold " << endl;
     for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
     {
-        cout << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << endl;
+        j++;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << "     ||     " << (*it).can_be_sold << endl;
     }
     cout << endl;
     //Potions
     int i = 0;
     for (list<PotionsNode>::iterator it = PotionsList.begin(); it != PotionsList.end(); ++it)
     {
+        j++;
         if (i == 0)
         {
             cout << "Strength Potions you can BUY: " << endl;
@@ -415,7 +419,7 @@ void Grid::show_market()
             cout << "Agility Potions you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Agility Boost " << endl;
         }
-        cout << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).boost << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).boost << endl;
         i++;
     }
     cout << endl;
@@ -423,6 +427,7 @@ void Grid::show_market()
     i = 0;
     for (list<SpellsNode>::iterator it = SpellsList.begin(); it != SpellsList.end(); ++it)
     {
+        j++;
         if (i == 0)
         {
             cout << "Ice Spells you can BUY: " << endl;
@@ -431,14 +436,14 @@ void Grid::show_market()
         if (i == 5)
         {
             cout << "Fire Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Armor Reduction" << endl;
+            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Armor Reduction " << endl;
         }
         if (i == 10)
         {
             cout << "Lighting Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Dodge Possibility Reduction" << endl;
+            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Dodge Possibility Reduction " << endl;
         }
-        cout << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << endl;
         i++;
     }
 }

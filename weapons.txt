@@ -1,5 +1,5 @@
-Caladbolg 10 1 100 1
-Taming_Sword 15 2 150 1
-Crystal_Sword 20 3 200 2
-Excalibur 25 4 250 2
-Ragnarok 30 5 300 1
+Caladbolg 10 1 100 1 YES
+Taming_Sword 15 2 150 1 YES
+Crystal_Sword 20 3 200 2 NO
+Excalibur 25 4 250 2 YES
+Ragnarok 30 5 300 1 NO
