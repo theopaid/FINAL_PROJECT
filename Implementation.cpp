@@ -260,18 +260,35 @@ Grid::Grid(int _x, int _y, int _heroes_count)
     : x(_x), y(_y), heroes_count(_heroes_count), row(_x, common), my_grid(_y, row)
 {
     cout << "The map is getting rendered!" << endl;
-    //square_type random_sq;
-    srand(time(NULL));
-    //vector< vector<square_type> > my_vector(x, vector<square_type>(y));
-    for (int i = 0; i < x; i++)
-    {
-        for (int j = 0; j < y; j++)
-        {
-            my_grid[i][j] = static_cast<square_type>(rand() % 3);
-        }
-    }
+    createMap(x, y);
     cout << "Now the market is being created!" << endl;
     createMarket();
+}
+
+void Grid::createMap(int x, int y) {
+    int my_square;
+    ifstream MapFile;
+    MapFile.open("map.txt");
+    if(!MapFile) {
+        cerr << "Unable to open file map.txt";
+        exit(1);
+    }
+    for(int i=0; i<x; i++) {
+        for(int j=0; j<y; j++) {
+            MapFile >> my_square;
+            switch(my_square) {
+                case 2 :
+                    my_grid[i][j] = common;
+                    break;
+                case 1 :
+                    my_grid[i][j] = market;
+                    break;
+                case 0 :
+                    my_grid[i][j] = nonAccessible;
+                    break;
+            }
+        }
+    }
 }
 
 void Grid::displayMap()
@@ -487,7 +504,7 @@ void Grid::Menu()
             cout << "It was fun while it lasted. GGWP :D" << endl;
             exit(0);
         default:
-            cout << "Your input was wrong. Please try again :" << endl;
+            cout << "Your input was wrong. Please TRY AGAIN." << endl;
             break;
         }
         cin.clear();
