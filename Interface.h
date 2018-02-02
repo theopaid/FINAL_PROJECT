@@ -295,6 +295,7 @@ class Grid
 
   public:
     Grid(int _x, int _y, int _heroes_count);
+    void createMap(int , int );
     void displayMap();
     void move(next_move my_move);
     void createMarket();
