@@ -299,7 +299,7 @@ class Grid
     Grid(int _x, int _y, int _heroes_count);
     void createMap(int, int);
     void displayMap();
-    void move(next_move);
+    void move();
     void createMarket();
     void show_market();
     void Menu();

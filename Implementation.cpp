@@ -334,23 +334,91 @@ void Grid::displayMap()
     cout << "Your position is : [ " << pos_x << " , " << pos_y << " ]." << endl;
 }
 
-void Grid::move(next_move my_move)
+void Grid::move()
 {
-    switch (my_move)
+    int my_move;
+    while (true)
     {
-    case up:
-
-        break;
-    case down:
-
-        break;
-    case right_:
-
-        break;
-    case left_:
-
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        cout << endl
+             << "////////// MOVE //////////" << endl
+             << endl;
+        displayMap();
+        cout << "Here are the options you have : " << endl;
+        cout << "1 - Up" << endl;
+        cout << "2 - Down" << endl;
+        cout << "3 - Right" << endl;
+        cout << "4 - Left" << endl;
+        cout << "Type your choice and press return : ";
+        cin >> my_move;
+        cout << endl;
+        switch (my_move)
+        {
+        case 1:
+            if ((pos_x - 1) < 1)
+            {
+                cout << "===> Stay inside the map, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            else if (my_grid[pos_x - 1 - 1][pos_y - 1] == nonAccessible)
+            {
+                cout << "===> You are trying to move to a non Accessible position, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            pos_x--;
+            cout << "Moving complete. Your new position is [ " << pos_x << " , " << pos_y << " ]" << endl;
+            break;
+        case 2:
+            if ((pos_x + 1) > 6)
+            {
+                cout << "===> Stay inside the map, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            else if (my_grid[pos_x + 1 - 1][pos_y -1] == nonAccessible)
+            {
+                cout << "===> You are trying to move to a non Accessible position, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            pos_x++;
+            cout << "Moving complete. Your new position is [ " << pos_x << " , " << pos_y << " ]" << endl;
+            break;
+        case 3:
+            if ((pos_y + 1) > 6)
+            {
+                cout << "===> Stay inside the map, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            else if (my_grid[pos_x - 1][pos_y + 1 - 1] == nonAccessible)
+            {
+                cout << "===> You are trying to move to a non Accessible position, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            pos_y++;
+            cout << "Moving complete. Your new position is [ " << pos_x << " , " << pos_y << " ]" << endl;
+            break;
+        case 4:
+            if ((pos_y - 1) < 1)
+            {
+                cout << "===> Stay inside the map, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            else if (my_grid[pos_x - 1][pos_y - 1 - 1] == nonAccessible)
+            {
+                cout << "===> You are trying to move to a non Accessible position, please TRY AGAIN <===" << endl;
+                continue;
+            }
+            pos_y--;
+            cout << "Moving complete. Your new position is [ " << pos_x << " , " << pos_y << " ]" << endl;
+            break;
+        default:
+            cout << "===> Your input was wrong, please TRY AGAIN <===" << endl;
+            continue;
+        }
         break;
     }
+    cout << endl;
+    
 }
 
 void Grid::createMarket()
@@ -493,7 +561,8 @@ void Grid::Menu()
         cout << "2 - Show the Market" << endl;
         cout << "3 - Buy an item from the market" << endl;
         cout << "4 - Sell an Item from your Inventory" << endl;
-        cout << "5 - Quit the Game" << endl;
+        cout << "5 - Move your Hero(s)" << endl;
+        cout << "10 - Quit the Game" << endl;
         cout << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
@@ -512,6 +581,9 @@ void Grid::Menu()
 
             break;
         case 5:
+            move();
+            break;
+        case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
             exit(0);
         default:
