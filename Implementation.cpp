@@ -9,45 +9,6 @@
 
 using namespace std;
 
-/*void Grid::Menu() {
-    int input;
-    bool gameOn = true;
-    cout << "////////// MENU //////////" << endl << endl;
-    cout << "Here are the options you have : " << endl;
-    cout << "1 - Display the Map" << endl;
-    cout << "2 - Show the Market" << endl;
-    cout << "3 - Buy an item from the market" << endl;
-    cout << "4 - Sell an Item from your Inventory" << endl;
-    cout << "5 - Quit the Game";
-    cout << "Type your choice and press return : ";
-    while(gameOn) {
-        cin >> input;
-        cout << endl;
-        switch(input) {
-            case 1:
-                displayMap();
-                break;
-            case 2:
-                show_market();
-                break;
-            case 3:
-        
-                break;
-            case 4:
-                cout << "It was fun while it lasted. GGWP :D";
-                exit(0);
-            case 5:
-
-                break;
-            default:
-                cout << "Your input was wrong. Please try again :";
-                break;
-        }
-    }
-}*/
-
-
-
 // Class Item
 Item::Item(string _name, int _price, int _base_level)
     : name(_name), price(_price), base_level(_base_level) {}
@@ -377,7 +338,7 @@ void Grid::createMarket()
         exit(1);
     }
     WeaponNode w_struct;
-    while (WeaponsFile >> w_struct.name >> w_struct.price >> w_struct.base_level >> w_struct.damage >> w_struct.hands >> w_struct.can_be_sold)
+    while (WeaponsFile >> w_struct.name >> w_struct.price >> w_struct.base_level >> w_struct.damage >> w_struct.hands)
         WeaponList.push_back(w_struct);
     WeaponsFile.close();
     // List of Armors
@@ -389,7 +350,7 @@ void Grid::createMarket()
         exit(1);
     }
     ArmorNode a_struct;
-    while (ArmorsFile >> a_struct.name >> a_struct.price >> a_struct.base_level >> a_struct.dmg_reduction >> a_struct.can_be_sold)
+    while (ArmorsFile >> a_struct.name >> a_struct.price >> a_struct.base_level >> a_struct.dmg_reduction)
         ArmorList.push_back(a_struct);
     ArmorsFile.close();
     // List of Potions
@@ -424,20 +385,20 @@ void Grid::show_market()
     //Weapons
     int j = 0;
     cout << "Weapons you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage || How many hands || Can be Sold " << endl;
+    cout << " Name || Price || Level Requirement || Damage || How many hands " << endl;
     for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
     {
         j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << "     ||     " << (*it).can_be_sold << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << endl;
     }
     cout << endl;
     //Armors
     cout << "Armors you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage Reduction || Can be Sold " << endl;
+    cout << " Name || Price || Level Requirement || Damage Reduction " << endl;
     for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
     {
         j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << "     ||     " << (*it).can_be_sold << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << endl;
     }
     cout << endl;
     //Potions

@@ -4,9 +4,6 @@
 
 using namespace std;
 
-//enum next_move;
-//enum square_type;
-
 struct PotionsNode
 {
     string name;
@@ -31,7 +28,6 @@ struct WeaponNode
     int base_level;
     int damage;
     int hands;
-    string can_be_sold;
 };
 
 struct ArmorNode {
@@ -39,7 +35,6 @@ struct ArmorNode {
     int price;
     int base_level;
     int dmg_reduction;
-    string can_be_sold;
 };
 
 enum square_type

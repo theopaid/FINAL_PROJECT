@@ -1,5 +1,5 @@
-Endless_Road 10 1 20 YES
-Genji_Shield 15 2 30 NO
-Emblem 20 3 40 YES
-Crystal_Shield 25 4 50 YES
-Aegis_Shield 30 5 60 NO
+Endless_Road 10 1 20
+Genji_Shield 15 2 30
+Emblem 20 3 40
+Crystal_Shield 25 4 50
+Aegis_Shield 30 5 60
