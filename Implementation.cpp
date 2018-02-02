@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <fstream>
+#include <climits>
 #include "Interface.h"
 
 using namespace std;
@@ -259,33 +260,40 @@ Spirit::~Spirit() {}
 Grid::Grid(int _x, int _y, int _heroes_count)
     : x(_x), y(_y), heroes_count(_heroes_count), row(_x, common), my_grid(_y, row)
 {
+    pos_x = 1;
+    pos_y = 1;
     cout << "The map is getting rendered!" << endl;
     createMap(x, y);
     cout << "Now the market is being created!" << endl;
     createMarket();
 }
 
-void Grid::createMap(int x, int y) {
+void Grid::createMap(int x, int y)
+{
     int my_square;
     ifstream MapFile;
     MapFile.open("map.txt");
-    if(!MapFile) {
+    if (!MapFile)
+    {
         cerr << "Unable to open file map.txt";
         exit(1);
     }
-    for(int i=0; i<x; i++) {
-        for(int j=0; j<y; j++) {
+    for (int i = 0; i < x; i++)
+    {
+        for (int j = 0; j < y; j++)
+        {
             MapFile >> my_square;
-            switch(my_square) {
-                case 2 :
-                    my_grid[i][j] = common;
-                    break;
-                case 1 :
-                    my_grid[i][j] = market;
-                    break;
-                case 0 :
-                    my_grid[i][j] = nonAccessible;
-                    break;
+            switch (my_square)
+            {
+            case 2:
+                my_grid[i][j] = common;
+                break;
+            case 1:
+                my_grid[i][j] = market;
+                break;
+            case 0:
+                my_grid[i][j] = nonAccessible;
+                break;
             }
         }
     }
@@ -323,6 +331,7 @@ void Grid::displayMap()
     for (int i = 0; i < x * 2 + 1; i++)
         cout << "-";
     cout << endl;
+    cout << "Your position is : [ " << pos_x << " , " << pos_y << " ]." << endl;
 }
 
 void Grid::move(next_move my_move)
@@ -398,7 +407,8 @@ void Grid::createMarket()
 
 void Grid::show_market()
 {
-    cout << "/////////////// MARKET ////////////////" << endl << endl;
+    cout << "/////////////// MARKET ////////////////" << endl
+         << endl;
     //Weapons
     int j = 0;
     cout << "Weapons you can BUY: " << endl;
@@ -475,7 +485,8 @@ void Grid::Menu()
     bool gameOn = true;
     while (gameOn)
     {
-        cout << "////////// MENU //////////" << endl
+        cout << endl
+             << "////////// MENU //////////" << endl
              << endl;
         cout << "Here are the options you have : " << endl;
         cout << "1 - Display the Map" << endl;

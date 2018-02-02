@@ -12,7 +12,8 @@ struct PotionsNode
     float boost;
 };
 
-struct SpellsNode {
+struct SpellsNode
+{
     string name;
     int price;
     int base_level;
@@ -30,7 +31,8 @@ struct WeaponNode
     int hands;
 };
 
-struct ArmorNode {
+struct ArmorNode
+{
     string name;
     int price;
     int base_level;
@@ -285,7 +287,7 @@ class Spirit : public Monster
 class Grid
 {
   private:
-    int x, y, heroes_count;
+    int x, y, heroes_count, pos_x, pos_y;
     vector<square_type> row;
     vector<vector<square_type> > my_grid;
     list<PotionsNode> PotionsList;
@@ -295,9 +297,9 @@ class Grid
 
   public:
     Grid(int _x, int _y, int _heroes_count);
-    void createMap(int , int );
+    void createMap(int, int);
     void displayMap();
-    void move(next_move my_move);
+    void move(next_move);
     void createMarket();
     void show_market();
     void Menu();
