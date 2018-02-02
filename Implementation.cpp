@@ -334,22 +334,228 @@ void Grid::displayMap()
     cout << "Your position is : [ " << pos_x << " , " << pos_y << " ]." << endl;
 }
 
-void Grid::move(next_move my_move)
-{
+//void Grid::move(next_move my_move)
+void Grid::move()
+{	
+	while (true){
+	cout << endl
+             << "////////// MOVE //////////" << endl
+             << endl;
+             displayMap();
+        cout << "Here are the options you have : " << endl;
+        cout << "1 - Up" << endl;
+        cout << "2 - Down" << endl;
+        cout << "3 - Right" << endl;
+        cout << "4 - Left" << endl;
+        cout << "Type your choice and press return : ";
+	int my_move;
+	cin>>my_move;
+	cout<<endl;
+	//int nextx=pos_x;
+	//int nexty=pos_y;
     switch (my_move)
     {
-    case up:
+    	case up:
+    		if ((pos_x-1)<1) {
+			cout << "Stay inside the map please try again " <<endl;
+			continue;}
+			pos_x--;
+    	    break;
+    	case down:
+    		if ((pos_x+1)>6) {
+			cout << "Stay inside the map please try again " <<endl;
+			continue;}
+			pos_x++;
+        	break;
+    	case right_:
+    		if ((pos_y+1)>6) {
+			cout << "Stay inside the map please try again" <<endl;
+			continue;}
+			pos_y++;
+        	break;
+    	case left_:
+    		if ((pos_y-1)<1) {
+			cout << "Stay inside the map please try again" <<endl;
+			continue;}
+			pos_y--;
+        	break;
+    }
+    break;
+	}
+}
 
-        break;
-    case down:
+void Grid::createMarket()
+{
+    // List of Weapons
+    ifstream WeaponsFile;
+    WeaponsFile.open("weapons.txt");
+    if (!WeaponsFile)
+    {
+        cerr << "Unable to open file weapons.txt";
+        exit(1);
+    }
+    WeaponNode w_struct;
+    while (WeaponsFile >> w_struct.name >> w_struct.price >> w_struct.base_level >> w_struct.damage >> w_struct.hands)
+        WeaponList.push_back(w_struct);
+    WeaponsFile.close();
+    // List of Armors
+    ifstream ArmorsFile;
+    ArmorsFile.open("armors.txt");
+    if (!ArmorsFile)
+    {
+        cerr << "Unable to open file armors.txt";
+        exit(1);
+    }
+    ArmorNode a_struct;
+    while (ArmorsFile >> a_struct.name >> a_struct.price >> a_struct.base_level >> a_struct.dmg_reduction)
+        ArmorList.push_back(a_struct);
+    ArmorsFile.close();
+    // List of Potions
+    ifstream PotionsFile;
+    PotionsFile.open("potions.txt");
+    if (!PotionsFile)
+    {
+        cerr << "Unable to open file potion.txt";
+        exit(1);
+    }
+    PotionsNode p_struct;
+    while (PotionsFile >> p_struct.name >> p_struct.price >> p_struct.base_level >> p_struct.boost)
+        PotionsList.push_back(p_struct);
+    PotionsFile.close();
+    // List of Spells
+    ifstream SpellsFile;
+    SpellsFile.open("spells.txt");
+    if (!SpellsFile)
+    {
+        cerr << "Unable to open file spells.txt";
+        exit(1);
+    }
+    SpellsNode s_struct;
+    while (SpellsFile >> s_struct.name >> s_struct.price >> s_struct.base_level >> s_struct.dmg_var >> s_struct.mana >> s_struct.reduction)
+        SpellsList.push_back(s_struct);
+    SpellsFile.close();
+}
 
-        break;
-    case right_:
+void Grid::show_market()
+{
+    cout << "/////////////// MARKET ////////////////" << endl
+         << endl;
+    //Weapons
+    int j = 0;
+    cout << "Weapons you can BUY: " << endl;
+    cout << " Name || Price || Level Requirement || Damage || How many hands " << endl;
+    for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
+    {
+        j++;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << endl;
+    }
+    cout << endl;
+    //Armors
+    cout << "Armors you can BUY: " << endl;
+    cout << " Name || Price || Level Requirement || Damage Reduction " << endl;
+    for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
+    {
+        j++;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << endl;
+    }
+    cout << endl;
+    //Potions
+    int i = 0;
+    for (list<PotionsNode>::iterator it = PotionsList.begin(); it != PotionsList.end(); ++it)
+    {
+        j++;
+        if (i == 0)
+        {
+            cout << "Strength Potions you can BUY: " << endl;
+            cout << " Name || Price || Level Requirement || Strength Boost " << endl;
+        }
+        if (i == 5)
+        {
+            cout << endl;
+            cout << "Dexterity Potions you can BUY: " << endl;
+            cout << " Name || Price || Level Requirement || Dexterity Boost " << endl;
+        }
+        if (i == 10)
+        {
+            cout << endl;
+            cout << "Agility Potions you can BUY: " << endl;
+            cout << " Name || Price || Level Requirement || Agility Boost " << endl;
+        }
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).boost << endl;
+        i++;
+    }
+    cout << endl;
+    //Spells
+    i = 0;
+    for (list<SpellsNode>::iterator it = SpellsList.begin(); it != SpellsList.end(); ++it)
+    {
+        j++;
+        if (i == 0)
+        {
+            cout << "Ice Spells you can BUY: " << endl;
+            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Damage Variety Reduction " << endl;
+        }
+        if (i == 5)
+        {
+            cout << "Fire Spells you can BUY: " << endl;
+            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Armor Reduction " << endl;
+        }
+        if (i == 10)
+        {
+            cout << "Lighting Spells you can BUY: " << endl;
+            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Dodge Possibility Reduction " << endl;
+        }
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << endl;
+        i++;
+    }
+}
 
-        break;
-    case left_:
+void Grid::Menu()
+{
+    int input;
+    bool gameOn = true;
+    while (gameOn)
+    {
+        cout << endl
+             << "////////// MENU //////////" << endl
+             << endl;
+        cout << "Here are the options you have : " << endl;
+        cout << "1 - Display the Map" << endl;
+        cout << "2 - Show the Market" << endl;
+        cout << "3 - Buy an item from the market" << endl;
+        cout << "4 - Sell an Item from your Inventory" << endl;
+        cout << "5 - Move your heroe(s)" << endl;
+		cout << "10 - Quit the Game" << endl;
+        cout << "Type your choice and press return : ";
+        cin >> input;
+        cout << endl;
+        switch (input)
+        {
+        case 1:
+            displayMap();
+            break;
+        case 2:
+            show_market();
+            break;
+        case 3:
 
-        break;
+            break;
+        case 4:
+
+            break;
+    	case 5:
+    		move();
+    		
+    		break;
+        case 10:
+            cout << "It was fun while it lasted. GGWP :D" << endl;
+            exit(0);
+        default:
+            cout << "Your input was wrong. Please TRY AGAIN." << endl;
+            break;
+        }
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
     }
 }
 
