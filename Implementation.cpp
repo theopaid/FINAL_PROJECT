@@ -418,7 +418,6 @@ void Grid::move()
         break;
     }
     cout << endl;
-    
 }
 
 void Grid::createMarket()
