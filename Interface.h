@@ -294,11 +294,13 @@ class Grid
     list<SpellsNode> SpellsList;
     list<WeaponNode> WeaponList;
     list<ArmorNode> ArmorList;
+    vector<Hero*> my_heroes;
 
   public:
     Grid(int _x, int _y, int _heroes_count);
     void createMap(int, int);
     void displayMap();
+    void createHero();
     void move();
     void createMarket();
     void show_market();

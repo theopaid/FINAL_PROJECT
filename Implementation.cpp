@@ -176,6 +176,7 @@ Sorcerer::Sorcerer(string _name, int _level, int _healthPower, int _magicPower, 
 }
 void Sorcerer::LevelUp()
 {
+    cout << Living::get_name() << " is leveling Up!" << endl;
     strength = strength + strength * (5.0 / 100.0);
     agility = agility + agility * (10.0 / 100.0);
     dexterity = dexterity + dexterity * (15.0 / 100.0);
@@ -192,6 +193,7 @@ Paladin::Paladin(string _name, int _level, int _healthPower, int _magicPower, fl
 }
 void Paladin::LevelUp()
 {
+    cout << Living::get_name() << " is leveling Up!" << endl;
     strength = strength + strength * (15.0 / 100.0);
     agility = agility + agility * (5.0 / 100.0);
     dexterity = dexterity + dexterity * (10.0 / 100.0);
@@ -375,7 +377,7 @@ void Grid::move()
                 cout << "===> Stay inside the map, please TRY AGAIN <===" << endl;
                 continue;
             }
-            else if (my_grid[pos_x + 1 - 1][pos_y -1] == nonAccessible)
+            else if (my_grid[pos_x + 1 - 1][pos_y - 1] == nonAccessible)
             {
                 cout << "===> You are trying to move to a non Accessible position, please TRY AGAIN <===" << endl;
                 continue;
@@ -546,6 +548,84 @@ void Grid::show_market()
     }
 }
 
+void Grid::createHero()
+{
+    int hero_type;
+    string hero_name;
+    string more_heroes;
+    Hero *hero_ptr;
+    while (true)
+    {
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        cout << endl
+             << "////////// HERO CREATION //////////" << endl
+             << endl;
+        cout << "Here are the options you have : " << endl;
+        cout << "1 - Create a Warrior" << endl;
+        cout << "2 - Create a Sorcerer" << endl;
+        cout << "3 - Create a Paladin" << endl;
+        cout << "Type your choice and press return : ";
+        cin >> hero_type;
+        cout << endl;
+        switch (hero_type)
+        {
+        case 1:
+            cout << "What do you want your Warrior to be called ? : ";
+            cin >> hero_name;
+            cout << endl;
+            hero_ptr = new Warrior(hero_name, 1, 1, 1, 1, 1, 1, 1, 1);
+            my_heroes.push_back(hero_ptr);
+            break;
+        case 2:
+            cout << "What do you want your Sorcerer to be called ? : ";
+            cin >> hero_name;
+            cout << endl;
+            hero_ptr = new Sorcerer(hero_name, 1, 1, 1, 1, 1, 1, 1, 1);
+            my_heroes.push_back(hero_ptr);
+            break;
+        case 3:
+            cout << "What do you want your Paladin to be called ? : ";
+            cin >> hero_name;
+            cout << endl;
+            hero_ptr = new Paladin(hero_name, 1, 1, 1, 1, 1, 1, 1, 1);
+            my_heroes.push_back(hero_ptr);
+            break;
+        default:
+            cout << "==> Your input was wrong, please TRY AGAIN <==" << endl;
+            continue;
+        }
+        cout << hero_name << " has been created." << endl;
+        while (true)
+        {
+            cout << endl
+                 << "Do you want to create more Heroes ? (yes|no) : ";
+            cin >> more_heroes;
+            cout << endl;
+            if (more_heroes == "yes")
+            {
+                if (my_heroes.size() == 3)
+                {
+                    cout << "Sorry, you can't create any more Heroes :(" << endl;
+                    break;
+                }
+                createHero();
+                break;
+            }
+            else if (more_heroes == "no")
+            {
+                break;
+            }
+            else
+            {
+                cout << "==> Your input was wrong, please TRY AGAIN <==" << endl;
+                continue;
+            }
+        }
+        break;
+    }
+}
+
 void Grid::Menu()
 {
     int input;
@@ -561,6 +641,7 @@ void Grid::Menu()
         cout << "3 - Buy an item from the market" << endl;
         cout << "4 - Sell an Item from your Inventory" << endl;
         cout << "5 - Move your Hero(s)" << endl;
+        cout << "6 - Create your Hero(s)" << endl;
         cout << "10 - Quit the Game" << endl;
         cout << "Type your choice and press return : ";
         cin >> input;
@@ -581,6 +662,9 @@ void Grid::Menu()
             break;
         case 5:
             move();
+            break;
+        case 6:
+            createHero();
             break;
         case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
