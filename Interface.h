@@ -4,12 +4,15 @@
 
 using namespace std;
 
+void welcome();
+
 struct PotionsNode
 {
     string name;
     int price;
     int base_level;
     float boost;
+    string type;
 };
 
 struct SpellsNode
@@ -20,6 +23,7 @@ struct SpellsNode
     int dmg_var;
     int mana;
     int reduction;
+    string type;
 };
 
 struct WeaponNode
@@ -54,17 +58,32 @@ enum next_move
     left_
 };
 
+enum TypeOfItem
+{
+    weapon,
+    armor,
+    strength_potion,
+    dexterity_potion,
+    agility_potion,
+    ice_spell,
+    fire_spell,
+    lighting_spell
+};
+
 class Item
 {
 
   private:
     string name;
     int price, base_level;
+    TypeOfItem item_type;
 
   public:
     Item(string _name, int _price, int _base_level);
-    virtual float get_boost() = 0;
-    virtual void use_the_potion() = 0;
+    TypeOfItem get_type() const;
+    void set_type(TypeOfItem);
+    //virtual float get_boost() = 0;
+    //virtual void use_the_potion() = 0;
     virtual ~Item();
 };
 
@@ -75,6 +94,8 @@ class Weapon : public Item
 
   public:
     Weapon(string _name, int _price, int _base_level, int _damage, int _hands);
+    //virtual float get_boost() = 0;
+    //virtual void use_the_potion() = 0;
     ~Weapon();
 };
 
@@ -129,9 +150,12 @@ class Spell
   private:
     string name;
     int price, base_level, dmg_var, mana;
+    TypeOfItem item_type;
 
   public:
     Spell(string _name, int _price, int _base_level, int _dmg_var, int _mana);
+    TypeOfItem get_type() const;
+    void set_type(TypeOfItem);
     ~Spell();
 };
 
@@ -174,6 +198,7 @@ class Living
   public:
     Living(string _name, int _level, int _healthPower);
     string get_name() const;
+    int get_Level();
     ~Living();
 };
 
@@ -198,6 +223,11 @@ class Hero : public Living
     void add_boost_to_strength(float boost);
     void add_boost_to_dexterity(float boost);
     void add_boost_to_agility(float boost);
+    void add_inventoryItem(Item *);
+    void add_inventorySpell(Spell *);
+    int getMoney();
+    void setMoney(int);
+    int getLevel();
     ~Hero();
 };
 
@@ -294,7 +324,7 @@ class Grid
     list<SpellsNode> SpellsList;
     list<WeaponNode> WeaponList;
     list<ArmorNode> ArmorList;
-    vector<Hero*> my_heroes;
+    vector<Hero *> my_heroes;
 
   public:
     Grid(int _x, int _y, int _heroes_count);
@@ -305,5 +335,6 @@ class Grid
     void createMarket();
     void show_market();
     void Menu();
+    void BuyFromMarket();
     ~Grid();
 };

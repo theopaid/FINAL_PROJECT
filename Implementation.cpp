@@ -14,23 +14,42 @@ using namespace std;
 Item::Item(string _name, int _price, int _base_level)
     : name(_name), price(_price), base_level(_base_level) {}
 
+TypeOfItem Item::get_type() const
+{
+    return item_type;
+}
+
+void Item::set_type(TypeOfItem _type)
+{
+    item_type = _type;
+}
+
 Item::~Item() {}
 
 // Class Weapon
 Weapon::Weapon(string _name, int _price, int _base_level, int _damage, int _hands)
-    : Item(_name, _price, _base_level), damage(_damage), hands(_hands) {}
+    : Item(_name, _price, _base_level), damage(_damage), hands(_hands)
+{
+    Item::set_type(weapon);
+}
 
 Weapon::~Weapon() {}
 
 // Class Armor
 Armor::Armor(string _name, int _price, int _base_level, int _dmg_reduction)
-    : Item(_name, _price, _base_level), dmg_reduction(_dmg_reduction) {}
+    : Item(_name, _price, _base_level), dmg_reduction(_dmg_reduction)
+{
+    Item::set_type(armor);
+}
 
 Armor::~Armor() {}
 
 // Class StrengthPotion
 StrengthPotion::StrengthPotion(string _name, int _price, int _base_level, float _boost)
-    : Item(_name, _price, _base_level), boost(_boost) {}
+    : Item(_name, _price, _base_level), boost(_boost)
+{
+    Item::set_type(strength_potion);
+}
 
 float StrengthPotion::get_boost() const
 {
@@ -49,7 +68,10 @@ StrengthPotion::~StrengthPotion()
 
 // Class DexterityPotion
 DexterityPotion::DexterityPotion(string _name, int _price, int _base_level, float _boost)
-    : Item(_name, _price, _base_level), boost(_boost) {}
+    : Item(_name, _price, _base_level), boost(_boost)
+{
+    Item::set_type(dexterity_potion);
+}
 
 float DexterityPotion::get_boost() const
 {
@@ -68,7 +90,10 @@ DexterityPotion::~DexterityPotion()
 
 // Class Agility Potion
 AgilityPotion::AgilityPotion(string _name, int _price, int _base_level, float _boost)
-    : Item(_name, _price, _base_level), boost(_boost) {}
+    : Item(_name, _price, _base_level), boost(_boost)
+{
+    Item::set_type(agility_potion);
+}
 
 float AgilityPotion::get_boost() const
 {
@@ -89,23 +114,42 @@ AgilityPotion::~AgilityPotion()
 Spell::Spell(string _name, int _price, int _base_level, int _dmg_var, int _mana)
     : name(_name), price(_price), base_level(_base_level), dmg_var(_dmg_var), mana(_mana) {}
 
+TypeOfItem Spell::get_type() const
+{
+    return item_type;
+}
+
+void Spell::set_type(TypeOfItem _type)
+{
+    item_type = _type;
+}
+
 Spell::~Spell() {}
 
 // Class IceSpell
 IceSpell::IceSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _dmg_var_reduction)
-    : Spell(_name, _price, _base_level, _dmg_var, _mana), dmg_var_reduction(_dmg_var_reduction) {}
+    : Spell(_name, _price, _base_level, _dmg_var, _mana), dmg_var_reduction(_dmg_var_reduction)
+{
+    Spell::set_type(ice_spell);
+}
 
 IceSpell::~IceSpell() {}
 
 // Class FireSpell
 FireSpell::FireSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _armor_reduction)
-    : Spell(_name, _price, _base_level, _dmg_var, _mana), armor_reduction(_armor_reduction) {}
+    : Spell(_name, _price, _base_level, _dmg_var, _mana), armor_reduction(_armor_reduction)
+{
+    Spell::set_type(fire_spell);
+}
 
 FireSpell::~FireSpell() {}
 
 // Class LightingSpell
 LightingSpell::LightingSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _dodge_reduction)
-    : Spell(_name, _price, _base_level, _dmg_var, _mana), dodge_reduction(_dodge_reduction) {}
+    : Spell(_name, _price, _base_level, _dmg_var, _mana), dodge_reduction(_dodge_reduction)
+{
+    Spell::set_type(lighting_spell);
+}
 
 LightingSpell::~LightingSpell() {}
 
@@ -116,6 +160,10 @@ Living::Living(string _name, int _level, int _healthPower)
 string Living::get_name() const
 {
     return name;
+}
+int Living::get_Level()
+{
+    return level;
 }
 
 Living::~Living() {}
@@ -147,6 +195,26 @@ float Hero::get_dexterity() const
 void Hero::set_dexterity(float new_dexterity)
 {
     dexterity = new_dexterity;
+}
+void Hero::add_inventoryItem(Item *my_item)
+{
+    inventory_items.push_back(my_item);
+}
+void Hero::add_inventorySpell(Spell *my_spell)
+{
+    inventory_spells.push_back(my_spell);
+}
+int Hero::getMoney()
+{
+    return money;
+}
+void Hero::setMoney(int _money)
+{
+    money = _money;
+}
+int Hero::getLevel()
+{
+    return Living::get_Level();
 }
 
 Hero::~Hero() {}
@@ -457,7 +525,7 @@ void Grid::createMarket()
         exit(1);
     }
     PotionsNode p_struct;
-    while (PotionsFile >> p_struct.name >> p_struct.price >> p_struct.base_level >> p_struct.boost)
+    while (PotionsFile >> p_struct.name >> p_struct.price >> p_struct.base_level >> p_struct.boost >> p_struct.type)
         PotionsList.push_back(p_struct);
     PotionsFile.close();
     // List of Spells
@@ -469,7 +537,7 @@ void Grid::createMarket()
         exit(1);
     }
     SpellsNode s_struct;
-    while (SpellsFile >> s_struct.name >> s_struct.price >> s_struct.base_level >> s_struct.dmg_var >> s_struct.mana >> s_struct.reduction)
+    while (SpellsFile >> s_struct.name >> s_struct.price >> s_struct.base_level >> s_struct.dmg_var >> s_struct.mana >> s_struct.reduction >> s_struct.type)
         SpellsList.push_back(s_struct);
     SpellsFile.close();
 }
@@ -498,54 +566,53 @@ void Grid::show_market()
     }
     cout << endl;
     //Potions
-    int i = 0;
     for (list<PotionsNode>::iterator it = PotionsList.begin(); it != PotionsList.end(); ++it)
     {
         j++;
-        if (i == 0)
+        if ((*it).type == "strength")
         {
             cout << "Strength Potions you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Strength Boost " << endl;
         }
-        if (i == 5)
+        if ((*it).type == "dexterity")
         {
             cout << endl;
             cout << "Dexterity Potions you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Dexterity Boost " << endl;
         }
-        if (i == 10)
+        if ((*it).type == "agility")
         {
             cout << endl;
             cout << "Agility Potions you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Agility Boost " << endl;
         }
         cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).boost << endl;
-        i++;
     }
     cout << endl;
     //Spells
-    i = 0;
     for (list<SpellsNode>::iterator it = SpellsList.begin(); it != SpellsList.end(); ++it)
     {
         j++;
-        if (i == 0)
+        if ((*it).type == "ice")
         {
             cout << "Ice Spells you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Damage Variety || Mana || Damage Variety Reduction " << endl;
         }
-        if (i == 5)
+        if ((*it).type == "fire")
         {
+            cout << endl;
             cout << "Fire Spells you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Damage Variety || Mana || Armor Reduction " << endl;
         }
-        if (i == 10)
+        if ((*it).type == "lighting")
         {
+            cout << endl;
             cout << "Lighting Spells you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Damage Variety || Mana || Dodge Possibility Reduction " << endl;
         }
         cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << endl;
-        i++;
     }
+    cout << endl;
 }
 
 void Grid::createHero()
@@ -574,21 +641,21 @@ void Grid::createHero()
             cout << "What do you want your Warrior to be called ? : ";
             cin >> hero_name;
             cout << endl;
-            hero_ptr = new Warrior(hero_name, 1, 1, 1, 1, 1, 1, 1, 1);
+            hero_ptr = new Warrior(hero_name, 1, 1, 1, 1, 1, 1, 100, 1);
             my_heroes.push_back(hero_ptr);
             break;
         case 2:
             cout << "What do you want your Sorcerer to be called ? : ";
             cin >> hero_name;
             cout << endl;
-            hero_ptr = new Sorcerer(hero_name, 1, 1, 1, 1, 1, 1, 1, 1);
+            hero_ptr = new Sorcerer(hero_name, 1, 1, 1, 1, 1, 1, 100, 1);
             my_heroes.push_back(hero_ptr);
             break;
         case 3:
             cout << "What do you want your Paladin to be called ? : ";
             cin >> hero_name;
             cout << endl;
-            hero_ptr = new Paladin(hero_name, 1, 1, 1, 1, 1, 1, 1, 1);
+            hero_ptr = new Paladin(hero_name, 1, 1, 1, 1, 1, 1, 100, 1);
             my_heroes.push_back(hero_ptr);
             break;
         default:
@@ -628,9 +695,9 @@ void Grid::createHero()
 
 void Grid::Menu()
 {
+    createHero();
     int input;
-    bool gameOn = true;
-    while (gameOn)
+    while (true)
     {
         cout << endl
              << "////////// MENU //////////" << endl
@@ -641,7 +708,8 @@ void Grid::Menu()
         cout << "3 - Buy an item from the market" << endl;
         cout << "4 - Sell an Item from your Inventory" << endl;
         cout << "5 - Move your Hero(s)" << endl;
-        cout << "6 - Create your Hero(s)" << endl;
+        cout << "6 - Buy an item or a spell from the market" << endl;
+        //cout << "6 - Create your Hero(s)" << endl;
         cout << "10 - Quit the Game" << endl;
         cout << "Type your choice and press return : ";
         cin >> input;
@@ -664,7 +732,7 @@ void Grid::Menu()
             move();
             break;
         case 6:
-            createHero();
+            BuyFromMarket();
             break;
         case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
@@ -678,4 +746,198 @@ void Grid::Menu()
     }
 }
 
+void Grid::BuyFromMarket()
+{
+    show_market();
+    int input;
+    while (true)
+    {
+        int i;
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        cout << "Select an Item or a Spell you want to buy : ";
+        if (cin >> input)
+        {
+            if (input <= 5)
+            {
+                i = 1;
+                for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
+                {
+                    if (input == i)
+                    {
+                        if ((*it).price > my_heroes[0]->getMoney())
+                        {
+                            cout << endl
+                                 << "Sorry you don't have enough money for this purchase." << endl;
+                            break;
+                        }
+                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        {
+                            cout << endl
+                                 << "Sorry the required level is higher than yours." << endl;
+                            break;
+                        }
+                        Item *weapon_ptr = new Weapon((*it).name, (*it).price, (*it).base_level, (*it).damage, (*it).hands);
+                        for (int j = 0; j < my_heroes.size(); j++)
+                        {
+                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
+                            my_heroes[j]->add_inventoryItem(weapon_ptr);
+                        }
+                        cout << endl
+                             << (*it).name << " has been added to your Hero's inventory." << endl;
+
+                        break;
+                    }
+                    i++;
+                }
+                break;
+            }
+            else if (input <= 10)
+            {
+                i = 6;
+                for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
+                {
+                    if (input == i)
+                    {
+                        if ((*it).price > my_heroes[0]->getMoney())
+                        {
+                            cout << endl
+                                 << "Sorry you don't have enough money for this purchase." << endl;
+                            break;
+                        }
+                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        {
+                            cout << endl
+                                 << "Sorry the required level is higher than yours." << endl;
+                            break;
+                        }
+                        Item *armor_ptr = new Armor((*it).name, (*it).price, (*it).base_level, (*it).dmg_reduction);
+                        for (int j = 0; j < my_heroes.size(); j++)
+                        {
+                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
+                            my_heroes[j]->add_inventoryItem(armor_ptr);
+                        }
+                        cout << endl
+                             << (*it).name << " has been added to your Hero's inventory." << endl;
+                        break;
+                    }
+                    i++;
+                }
+                break;
+            }
+            else if (input <= 25)
+            {
+                i = 11;
+                for (list<PotionsNode>::iterator it = PotionsList.begin(); it != PotionsList.end(); ++it)
+                {
+                    if (input == i)
+                    {
+                        if ((*it).price > my_heroes[0]->getMoney())
+                        {
+                            cout << endl
+                                 << "Sorry you don't have enough money for this purchase." << endl;
+                            break;
+                        }
+                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        {
+                            cout << endl
+                                 << "Sorry the required level is higher than yours." << endl;
+                            break;
+                        }
+                        Item *potion_ptr;
+                        if ((*it).type == "strength" or (*it).type == "//strength")
+                            potion_ptr = new StrengthPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
+                        else if ((*it).type == "dexterity" or (*it).type == "//dexterity")
+                            potion_ptr = new DexterityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
+                        else
+                            potion_ptr = new AgilityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
+                        for (int j = 0; j < my_heroes.size(); j++)
+                        {
+                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
+                            my_heroes[j]->add_inventoryItem(potion_ptr);
+                        }
+                        cout << endl
+                             << (*it).name << " has been added to your Hero's inventory." << endl;
+                        break;
+                    }
+                    i++;
+                }
+                break;
+            }
+            else if (input <= 40)
+            {
+                i = 26;
+                for (list<SpellsNode>::iterator it = SpellsList.begin(); it != SpellsList.end(); ++it)
+                {
+                    if (input == i)
+                    {
+                        if ((*it).price > my_heroes[0]->getMoney())
+                        {
+                            cout << endl
+                                 << "Sorry you don't have enough money for this purchase." << endl;
+                            break;
+                        }
+                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        {
+                            cout << endl
+                                 << "Sorry the required level is higher than yours." << endl;
+                            break;
+                        }
+                        Spell *spell_ptr;
+                        if ((*it).type == "ice" or (*it).type == "//ice")
+                            spell_ptr = new IceSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
+                        else if ((*it).type == "fire" or (*it).type == "//fire")
+                            spell_ptr = new FireSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
+                        else
+                            spell_ptr = new LightingSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
+                        for (int j = 0; j < my_heroes.size(); j++)
+                        {
+                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
+                            my_heroes[j]->add_inventorySpell(spell_ptr);
+                        }
+                        cout << endl
+                             << (*it).name << " has been added to your Hero's Spells list." << endl;
+                        break;
+                    }
+                    i++;
+                }
+                break;
+            }
+            else
+            {
+                cout << "This Item or Spell is not listed on the Market. Please TRY AGAIN." << endl;
+                continue;
+            }
+        }
+        cout << "Your input was wrong. Please TRY AGAIN." << endl;
+    }
+}
+
 Grid::~Grid() {}
+
+void welcome()
+{
+    string input;
+    cout << "Welcome to the game!" << endl;
+    while (true)
+    {
+        cout << "are you ready to play? (yes|no) : ";
+        cin >> input;
+        if (input == "no")
+        {
+            cout << "Take your time!" << endl;
+            exit(0);
+        }
+        else if (input == "yes")
+        {
+            cout << endl
+                 << "Let's play then!" << endl;
+            break;
+        }
+        else
+        {
+            cout << "Your input was wrong. Please TRY AGAIN." << endl;
+            continue;
+        }
+    }
+}

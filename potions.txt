@@ -1,15 +1,15 @@
-Potion 5 1 0.1
-Hi-Potion 10 2 0.2
-X-Potion 15 3 0.3
-Mega-Potion 20 4 0.4
-Ether 25 5 0.5
-Turbo_Ether 5 1 0.1
-Elixir 10 2 0.2
-Megalixir 15 3 0.3
-Phoenix_Down 20 4 0.4
-Mega_Phoenix 25 5 0.5
-Antidote 5 1 0.1
-Echo_Screen 10 2 0.2
-Eye_Drops 15 3 0.3
-Holy_Water 20 4 0.4
-Remedy 25 5 0.5
+Potion 5 1 0.1 strength
+Hi-Potion 10 2 0.2 //strength
+X-Potion 15 3 0.3 //strength
+Mega-Potion 20 4 0.4 //strength
+Ether 25 5 0.5 //strength
+Turbo_Ether 5 1 0.1 dexterity
+Elixir 10 2 0.2 //dexterity
+Megalixir 15 3 0.3 //dexterity
+Phoenix_Down 20 4 0.4 //dexterity
+Mega_Phoenix 25 5 0.5 //dexterity
+Antidote 5 1 0.1 agility
+Echo_Screen 10 2 0.2 //agility
+Eye_Drops 15 3 0.3 //agility
+Holy_Water 20 4 0.4 //agility
+Remedy 25 5 0.5 //agility
