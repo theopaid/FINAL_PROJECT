@@ -24,6 +24,15 @@ void Item::set_type(TypeOfItem _type)
     item_type = _type;
 }
 
+string Item::getName()
+{
+    return name;
+}
+
+int Item::getPrice() {
+    return price;
+}
+
 Item::~Item() {}
 
 // Class Weapon
@@ -161,7 +170,7 @@ string Living::get_name() const
 {
     return name;
 }
-int Living::get_Level()
+int Living::get_Level() const
 {
     return level;
 }
@@ -204,7 +213,46 @@ void Hero::add_inventorySpell(Spell *my_spell)
 {
     inventory_spells.push_back(my_spell);
 }
-int Hero::getMoney()
+void Hero::remove_inventoryItem()
+{
+    if(inventory_items.size()==0) {
+        cout << "There are no items in " << getName() << "'s inventory!" << endl;
+        return;
+    }
+    show_inventory();
+    string item_name;
+    bool sold = false;
+    int money;
+    while (!sold)
+    {
+        cout << "Type the name of the item you want to sell:";
+        cin >> item_name;
+        cout << endl;
+        for (int i = 0; i < inventory_items.size(); i++)
+        {
+            if(item_name == inventory_items[i]->getName()) {
+                money = inventory_items[i]->getPrice()/2;
+                setMoney(getMoney() + inventory_items[i]->getPrice()/2);
+                inventory_items.erase(inventory_items.begin() + i);
+                cout << item_name << " has been sold for " << money << endl;
+                sold = true;
+                break;
+            }
+        }
+        if(!sold)
+            cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
+    }
+}
+void Hero::show_inventory()
+{
+    cout << "Here are your inventory items:" << endl;
+    cout << "    NAME    " << endl;
+    for (int i = 0; i < inventory_items.size(); i++)
+    {
+        cout << inventory_items[i]->getName() << endl;
+    }
+}
+int Hero::getMoney() const
 {
     return money;
 }
@@ -212,9 +260,14 @@ void Hero::setMoney(int _money)
 {
     money = _money;
 }
-int Hero::getLevel()
+int Hero::getLevel() const
 {
     return Living::get_Level();
+}
+
+string Hero::getName() const
+{
+    return Living::get_name();
 }
 
 Hero::~Hero() {}
@@ -726,7 +779,7 @@ void Grid::Menu()
 
             break;
         case 4:
-
+            SelltoMarket();
             break;
         case 5:
             move();
@@ -748,6 +801,37 @@ void Grid::Menu()
 
 void Grid::BuyFromMarket()
 {
+    if (my_grid[pos_x - 1][pos_y - 1] != 1)
+    {
+        cout << "You are not at Market position!" << endl;
+        return;
+    }
+    int hero_number = 0;
+    if (my_heroes.size() > 1)
+    {
+        string hero_input;
+        bool flag = false;
+        while (!flag)
+        {
+            hero_number = 0;
+            cout << "Type the name of the hero you want the transaction to happen:";
+            cin >> hero_input;
+            cout << endl;
+            for (int i = 0; i < my_heroes.size(); i++)
+            {
+                if (hero_input == my_heroes[i]->getName())
+                {
+                    flag = true;
+                    break;
+                }
+                hero_number++;
+            }
+            if (flag == false)
+                cout << endl
+                     << "There is no Hero named this way, please TRY AGAIN" << endl;
+        }
+        cout << hero_input << endl;
+    }
     show_market();
     int input;
     while (true)
@@ -765,13 +849,13 @@ void Grid::BuyFromMarket()
                 {
                     if (input == i)
                     {
-                        if ((*it).price > my_heroes[0]->getMoney())
+                        if ((*it).price > my_heroes[hero_number]->getMoney())
                         {
                             cout << endl
                                  << "Sorry you don't have enough money for this purchase." << endl;
                             break;
                         }
-                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        if ((*it).base_level > my_heroes[hero_number]->getLevel())
                         {
                             cout << endl
                                  << "Sorry the required level is higher than yours." << endl;
@@ -780,11 +864,11 @@ void Grid::BuyFromMarket()
                         Item *weapon_ptr = new Weapon((*it).name, (*it).price, (*it).base_level, (*it).damage, (*it).hands);
                         for (int j = 0; j < my_heroes.size(); j++)
                         {
-                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
-                            my_heroes[j]->add_inventoryItem(weapon_ptr);
+                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                            my_heroes[hero_number]->add_inventoryItem(weapon_ptr);
                         }
                         cout << endl
-                             << (*it).name << " has been added to your Hero's inventory." << endl;
+                             << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
 
                         break;
                     }
@@ -799,13 +883,13 @@ void Grid::BuyFromMarket()
                 {
                     if (input == i)
                     {
-                        if ((*it).price > my_heroes[0]->getMoney())
+                        if ((*it).price > my_heroes[hero_number]->getMoney())
                         {
                             cout << endl
                                  << "Sorry you don't have enough money for this purchase." << endl;
                             break;
                         }
-                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        if ((*it).base_level > my_heroes[hero_number]->getLevel())
                         {
                             cout << endl
                                  << "Sorry the required level is higher than yours." << endl;
@@ -814,11 +898,11 @@ void Grid::BuyFromMarket()
                         Item *armor_ptr = new Armor((*it).name, (*it).price, (*it).base_level, (*it).dmg_reduction);
                         for (int j = 0; j < my_heroes.size(); j++)
                         {
-                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
-                            my_heroes[j]->add_inventoryItem(armor_ptr);
+                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                            my_heroes[hero_number]->add_inventoryItem(armor_ptr);
                         }
                         cout << endl
-                             << (*it).name << " has been added to your Hero's inventory." << endl;
+                             << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
                     }
                     i++;
@@ -832,13 +916,13 @@ void Grid::BuyFromMarket()
                 {
                     if (input == i)
                     {
-                        if ((*it).price > my_heroes[0]->getMoney())
+                        if ((*it).price > my_heroes[hero_number]->getMoney())
                         {
                             cout << endl
                                  << "Sorry you don't have enough money for this purchase." << endl;
                             break;
                         }
-                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        if ((*it).base_level > my_heroes[hero_number]->getLevel())
                         {
                             cout << endl
                                  << "Sorry the required level is higher than yours." << endl;
@@ -853,11 +937,11 @@ void Grid::BuyFromMarket()
                             potion_ptr = new AgilityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
                         for (int j = 0; j < my_heroes.size(); j++)
                         {
-                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
-                            my_heroes[j]->add_inventoryItem(potion_ptr);
+                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                            my_heroes[hero_number]->add_inventoryItem(potion_ptr);
                         }
                         cout << endl
-                             << (*it).name << " has been added to your Hero's inventory." << endl;
+                             << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
                     }
                     i++;
@@ -871,13 +955,13 @@ void Grid::BuyFromMarket()
                 {
                     if (input == i)
                     {
-                        if ((*it).price > my_heroes[0]->getMoney())
+                        if ((*it).price > my_heroes[hero_number]->getMoney())
                         {
                             cout << endl
                                  << "Sorry you don't have enough money for this purchase." << endl;
                             break;
                         }
-                        if ((*it).base_level > my_heroes[0]->getLevel())
+                        if ((*it).base_level > my_heroes[hero_number]->getLevel())
                         {
                             cout << endl
                                  << "Sorry the required level is higher than yours." << endl;
@@ -892,11 +976,11 @@ void Grid::BuyFromMarket()
                             spell_ptr = new LightingSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
                         for (int j = 0; j < my_heroes.size(); j++)
                         {
-                            my_heroes[j]->setMoney(my_heroes[j]->getMoney() - (*it).price);
-                            my_heroes[j]->add_inventorySpell(spell_ptr);
+                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                            my_heroes[hero_number]->add_inventorySpell(spell_ptr);
                         }
                         cout << endl
-                             << (*it).name << " has been added to your Hero's Spells list." << endl;
+                             << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
                     }
                     i++;
@@ -911,6 +995,41 @@ void Grid::BuyFromMarket()
         }
         cout << "Your input was wrong. Please TRY AGAIN." << endl;
     }
+}
+
+void Grid::SelltoMarket()
+{
+    if (my_grid[pos_x - 1][pos_y - 1] != 1)
+    {
+        cout << "You are not at Market position!" << endl;
+        return;
+    }
+    int hero_number = 0;
+    if (my_heroes.size() > 1)
+    {
+        string hero_input;
+        bool flag = false;
+        while (!flag)
+        {
+            hero_number = 0;
+            cout << "Type the name of the hero you want the transaction to happen:";
+            cin >> hero_input;
+            cout << endl;
+            for (int i = 0; i < my_heroes.size(); i++)
+            {
+                if (hero_input == my_heroes[i]->getName())
+                {
+                    flag = true;
+                    break;
+                }
+                hero_number++;
+            }
+            if (flag == false)
+                cout << endl
+                     << "There is no Hero named this way, please TRY AGAIN" << endl;
+        }
+    }
+    my_heroes[hero_number]->remove_inventoryItem();
 }
 
 Grid::~Grid() {}

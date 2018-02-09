@@ -82,6 +82,8 @@ class Item
     Item(string _name, int _price, int _base_level);
     TypeOfItem get_type() const;
     void set_type(TypeOfItem);
+    string getName();
+    int getPrice();
     //virtual float get_boost() = 0;
     //virtual void use_the_potion() = 0;
     virtual ~Item();
@@ -198,7 +200,7 @@ class Living
   public:
     Living(string _name, int _level, int _healthPower);
     string get_name() const;
-    int get_Level();
+    int get_Level() const;
     ~Living();
 };
 
@@ -225,9 +227,12 @@ class Hero : public Living
     void add_boost_to_agility(float boost);
     void add_inventoryItem(Item *);
     void add_inventorySpell(Spell *);
-    int getMoney();
+    void remove_inventoryItem();
+    void show_inventory();
+    int getMoney() const;
     void setMoney(int);
-    int getLevel();
+    int getLevel() const;
+    string getName() const;
     ~Hero();
 };
 
@@ -336,5 +341,6 @@ class Grid
     void show_market();
     void Menu();
     void BuyFromMarket();
+    void SelltoMarket();
     ~Grid();
 };
