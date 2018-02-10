@@ -29,7 +29,8 @@ string Item::getName()
     return name;
 }
 
-int Item::getPrice() {
+int Item::getPrice()
+{
     return price;
 }
 
@@ -42,6 +43,11 @@ Weapon::Weapon(string _name, int _price, int _base_level, int _damage, int _hand
     Item::set_type(weapon);
 }
 
+int Weapon::getHands()
+{
+    return hands;
+}
+
 Weapon::~Weapon() {}
 
 // Class Armor
@@ -50,6 +56,8 @@ Armor::Armor(string _name, int _price, int _base_level, int _dmg_reduction)
 {
     Item::set_type(armor);
 }
+
+int Armor::getHands() {}
 
 Armor::~Armor() {}
 
@@ -69,6 +77,8 @@ float StrengthPotion::get_boost() const
 {
     my_hero.add_boost_to_strength(boost);
 }*/
+
+int StrengthPotion::getHands() {}
 
 StrengthPotion::~StrengthPotion()
 {
@@ -92,6 +102,8 @@ float DexterityPotion::get_boost() const
     my_hero.add_boost_to_strength(boost);
 }*/
 
+int DexterityPotion::getHands() {}
+
 DexterityPotion::~DexterityPotion()
 {
     cout << "Hurray! You used all of the Dexterity Potion." << endl;
@@ -113,6 +125,8 @@ float AgilityPotion::get_boost() const
 {
     my_hero.add_boost_to_strength(boost);
 }*/
+
+int AgilityPotion::getHands() {}
 
 AgilityPotion::~AgilityPotion()
 {
@@ -175,11 +189,21 @@ int Living::get_Level() const
     return level;
 }
 
+int Living::get_HP()
+{
+    return healthPower;
+}
+
 Living::~Living() {}
 
 //Class Hero
 Hero::Hero(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
-    : Living(_name, _level, _healthPower), magicPower(_magicPower), strength(_strength), dexterity(_dexterity), agility(_agility), money(_money), experience(_experience) {}
+    : Living(_name, _level, _healthPower), magicPower(_magicPower), strength(_strength), dexterity(_dexterity), agility(_agility), money(_money), experience(_experience)
+{
+    my_equipment.hand1 = NULL;
+    my_equipment.hand2 = NULL;
+    my_equipment.armor = NULL;
+}
 
 float Hero::get_strength() const
 {
@@ -215,7 +239,8 @@ void Hero::add_inventorySpell(Spell *my_spell)
 }
 void Hero::remove_inventoryItem()
 {
-    if(inventory_items.size()==0) {
+    if (inventory_items.size() == 0)
+    {
         cout << "There are no items in " << getName() << "'s inventory!" << endl;
         return;
     }
@@ -225,31 +250,60 @@ void Hero::remove_inventoryItem()
     int money;
     while (!sold)
     {
-        cout << "Type the name of the item you want to sell:";
+        cout << endl
+             << "Type the name of the item you want to sell:";
         cin >> item_name;
         cout << endl;
         for (int i = 0; i < inventory_items.size(); i++)
         {
-            if(item_name == inventory_items[i]->getName()) {
-                money = inventory_items[i]->getPrice()/2;
-                setMoney(getMoney() + inventory_items[i]->getPrice()/2);
+            if (item_name == inventory_items[i]->getName())
+            {
+                money = inventory_items[i]->getPrice() / 2;
+                setMoney(getMoney() + inventory_items[i]->getPrice() / 2);
+                if(inventory_items[i] == my_equipment.hand1)
+                    my_equipment.hand1 = NULL;
+                if(inventory_items[i] == my_equipment.hand2)
+                    my_equipment.hand2 = NULL;
+                if(inventory_items[i] == my_equipment.armor)
+                    my_equipment.armor = NULL;
+                delete inventory_items[i];
                 inventory_items.erase(inventory_items.begin() + i);
                 cout << item_name << " has been sold for " << money << "." << endl;
                 sold = true;
                 break;
             }
         }
-        if(!sold)
+        if (!sold)
             cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
     }
 }
 void Hero::show_inventory()
 {
-    cout << "Here are your inventory items:" << endl;
-    cout << "    NAME    " << endl;
+    string type;
+    cout << endl
+         << "Here are " << getName() << "'s inventory items:" << endl;
+    cout << "    NAME    |    TYPE     " << endl;
     for (int i = 0; i < inventory_items.size(); i++)
     {
-        cout << inventory_items[i]->getName() << endl;
+        switch (inventory_items[i]->get_type())
+        {
+        case 0:
+            type = "Weapon";
+            break;
+        case 1:
+            type = "Armor";
+            break;
+        case 2:
+            type = "Strength Potion";
+            break;
+        case 3:
+            type = "Dexterity Potion";
+            break;
+        case 4:
+            type = "Agility Potion";
+            break;
+        }
+        cout << inventory_items[i]->getName() << "   |    " << type << endl;
     }
 }
 int Hero::getMoney() const
@@ -270,7 +324,129 @@ string Hero::getName() const
     return Living::get_name();
 }
 
-Hero::~Hero() {}
+int Hero::getHP()
+{
+    return Living::get_HP();
+}
+
+void Hero::displayStats()
+{
+    cout << getName() << "'s Stats:" << endl
+         << "Health Power : " << getHP() << endl
+         << "Magic Power : " << magicPower << endl
+         << "Strength : " << strength << endl
+         << "Dexterity : " << dexterity << endl
+         << "Agility : " << agility << endl
+         << "Money balance : " << getMoney() << endl
+         << "Level : " << getLevel() << endl
+         << "Experience : " << experience << endl
+         << endl;
+}
+
+void Hero::displayEquipment()
+{
+    cout << getName() << "'s Equipment :" << endl;
+    if (my_equipment.hand1 == NULL)
+        cout << "Left hand : Nothing Equipped" << endl;
+
+    else
+        cout << "Left hand : " << my_equipment.hand1->getName() << endl;
+
+    if (my_equipment.hand2 == NULL)
+        cout << "Right hand : Nothing Equipped" << endl;
+
+    else
+        cout << "Right hand : " << my_equipment.hand2->getName() << endl;
+
+    if (my_equipment.armor == NULL)
+        cout << "Armor : Nothing Equipped" << endl;
+
+    else
+        cout << "Armor : " << my_equipment.armor->getName() << endl;
+}
+
+void Hero::Equip()
+{
+    if (inventory_items.size() == 0)
+    {
+        cout << "There are no items in " << getName() << "'s inventory!" << endl;
+        return;
+    }
+    show_inventory();
+    string item_name;
+    bool equipped = false;
+    int money;
+    while (!equipped)
+    {
+        cout << endl
+             << "Type the name of the item you want to equip:";
+        cin >> item_name;
+        cout << endl;
+        for (int i = 0; i < inventory_items.size(); i++)
+        {
+            if (item_name == inventory_items[i]->getName())
+            {
+                if (inventory_items[i]->get_type() == 0)
+                { // Weapon
+                    if (inventory_items[i]->getHands() == 2)
+                    {
+                        my_equipment.hand1 = inventory_items[i];
+                        my_equipment.hand2 = inventory_items[i];
+                        cout << inventory_items[i]->getName() << " has been equipped to both " << getName() << "'s hands" << endl;
+                    }
+                    if (inventory_items[i]->getHands() == 1)
+                    {
+                        if(inventory_items[i] == my_equipment.hand1 || inventory_items[i] == my_equipment.hand1){
+                            cout << "This Item is already equipped!" << endl;
+                            return;
+                        }
+                        string hand_input;
+                        while (true)
+                        {
+                            cout << "In which hand do you want " << inventory_items[i]->getName() << " to be equipped. left or right? : ";
+                            cin >> hand_input;
+                            cout << endl;
+                            if (hand_input == "left")
+                            {
+                                my_equipment.hand1 = inventory_items[i];
+                                cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s left hand" << endl;
+                                break;
+                            }
+                            else if (hand_input == "right")
+                            {
+                                my_equipment.hand2 = inventory_items[i];
+                                cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s right hand" << endl;
+                                break;
+                            }
+                            else
+                            {
+                                cout << "Wrong input. Please TRY AGAIN." << endl;
+                            }
+                        }
+                        cout << endl;
+                    }
+                }
+                else if (inventory_items[i]->get_type() == 1)
+                { // Armor
+                    my_equipment.armor = inventory_items[i];
+                    cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s armor" << endl;
+                }
+                else
+                {
+                    cout << "This item is a Potion, therefore it can't be equipped!" << endl;
+                }
+                equipped = true;
+                break;
+            }
+        }
+        if (!equipped)
+            cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
+    }
+}
+
+Hero::~Hero()
+{
+}
 
 //Class Warrior
 Warrior::Warrior(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
@@ -680,12 +856,12 @@ void Grid::createHero()
         cin.ignore(INT_MAX, '\n');
         cout << endl
              << "////////// HERO CREATION //////////" << endl
-             << endl;
-        cout << "Here are the options you have : " << endl;
-        cout << "1 - Create a Warrior" << endl;
-        cout << "2 - Create a Sorcerer" << endl;
-        cout << "3 - Create a Paladin" << endl;
-        cout << "Type your choice and press return : ";
+             << endl
+             << "Here are the options you have : " << endl
+             << "1 - Create a Warrior" << endl
+             << "2 - Create a Sorcerer" << endl
+             << "3 - Create a Paladin" << endl
+             << "Type your choice and press return : ";
         cin >> hero_type;
         cout << endl;
         switch (hero_type)
@@ -754,17 +930,19 @@ void Grid::Menu()
     {
         cout << endl
              << "////////// MENU //////////" << endl
-             << endl;
-        cout << "Here are the options you have : " << endl;
-        cout << "1 - Display the Map" << endl;
-        cout << "2 - Show the Market" << endl;
-        cout << "3 - Buy an item from the market" << endl;
-        cout << "4 - Sell an Item from your Inventory" << endl;
-        cout << "5 - Move your Hero(s)" << endl;
-        cout << "6 - Buy an item or a spell from the market" << endl;
-        //cout << "6 - Create your Hero(s)" << endl;
-        cout << "10 - Quit the Game" << endl;
-        cout << "Type your choice and press return : ";
+             << endl
+             << "Here are the options you have : " << endl
+             << "1 - Display the Map" << endl
+             << "2 - Check the Inventory" << endl
+             << "3 - Display the stats of your Hero(s)" << endl
+             << "4 - Sell an Item from your Inventory" << endl
+             << "5 - Move your Hero(s)" << endl
+             << "6 - Buy an item or a spell from the market" << endl
+             << "7 - Show the Market" << endl
+             << "8 - Equip an item" << endl
+             << "9 - Display Equipment" << endl
+             << "10 - Quit the Game" << endl
+             << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
         switch (input)
@@ -773,10 +951,11 @@ void Grid::Menu()
             displayMap();
             break;
         case 2:
-            show_market();
+            for (int i = 0; i < my_heroes.size(); i++)
+                my_heroes[i]->show_inventory();
             break;
         case 3:
-
+            displayHeroStats();
             break;
         case 4:
             SelltoMarket();
@@ -787,6 +966,16 @@ void Grid::Menu()
         case 6:
             BuyFromMarket();
             break;
+        case 7:
+            show_market();
+            break;
+        case 8:
+            HeroToEquip();
+            break;
+        case 9:
+            for (int i = 0; i < my_heroes.size(); i++)
+                my_heroes[i]->displayEquipment();
+            break;
         case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
             exit(0);
@@ -796,6 +985,44 @@ void Grid::Menu()
         }
         cin.clear();
         cin.ignore(INT_MAX, '\n');
+    }
+}
+
+void Grid::HeroToEquip()
+{
+    int hero_number = 0;
+    if (my_heroes.size() > 1)
+    {
+        string hero_input;
+        bool flag = false;
+        while (!flag)
+        {
+            hero_number = 0;
+            cout << "Type the name of the hero you want to equip an Item:";
+            cin >> hero_input;
+            cout << endl;
+            for (int i = 0; i < my_heroes.size(); i++)
+            {
+                if (hero_input == my_heroes[i]->getName())
+                {
+                    flag = true;
+                    break;
+                }
+                hero_number++;
+            }
+            if (flag == false)
+                cout << endl
+                     << "There is no Hero named this way, please TRY AGAIN" << endl;
+        }
+    }
+    my_heroes[hero_number]->Equip();
+}
+
+void Grid::displayHeroStats()
+{
+    for (int i = 0; i < my_heroes.size(); i++)
+    {
+        my_heroes[i]->displayStats();
     }
 }
 
@@ -830,7 +1057,6 @@ void Grid::BuyFromMarket()
                 cout << endl
                      << "There is no Hero named this way, please TRY AGAIN" << endl;
         }
-        cout << hero_input << endl;
     }
     show_market();
     int input;
@@ -862,8 +1088,8 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *weapon_ptr = new Weapon((*it).name, (*it).price, (*it).base_level, (*it).damage, (*it).hands);
-                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
-                            my_heroes[hero_number]->add_inventoryItem(weapon_ptr);
+                        my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                        my_heroes[hero_number]->add_inventoryItem(weapon_ptr);
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
 
@@ -893,8 +1119,8 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *armor_ptr = new Armor((*it).name, (*it).price, (*it).base_level, (*it).dmg_reduction);
-                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
-                            my_heroes[hero_number]->add_inventoryItem(armor_ptr);
+                        my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                        my_heroes[hero_number]->add_inventoryItem(armor_ptr);
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
@@ -929,8 +1155,8 @@ void Grid::BuyFromMarket()
                             potion_ptr = new DexterityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
                         else
                             potion_ptr = new AgilityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
-                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
-                            my_heroes[hero_number]->add_inventoryItem(potion_ptr);
+                        my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                        my_heroes[hero_number]->add_inventoryItem(potion_ptr);
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
@@ -965,8 +1191,8 @@ void Grid::BuyFromMarket()
                             spell_ptr = new FireSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
                         else
                             spell_ptr = new LightingSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
-                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
-                            my_heroes[hero_number]->add_inventorySpell(spell_ptr);
+                        my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                        my_heroes[hero_number]->add_inventorySpell(spell_ptr);
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
@@ -1028,7 +1254,7 @@ void welcome()
     cout << "Welcome to the game!" << endl;
     while (true)
     {
-        cout << "are you ready to play? (yes|no) : ";
+        cout << "Αre you ready to play? (yes|no) : ";
         cin >> input;
         if (input == "no")
         {

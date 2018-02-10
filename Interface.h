@@ -6,6 +6,15 @@ using namespace std;
 
 void welcome();
 
+class Item;
+
+struct Equipment
+{
+    Item* hand1;
+    Item* hand2;
+    Item* armor;
+};
+
 struct PotionsNode
 {
     string name;
@@ -86,6 +95,7 @@ class Item
     int getPrice();
     //virtual float get_boost() = 0;
     //virtual void use_the_potion() = 0;
+    virtual int getHands() = 0;
     virtual ~Item();
 };
 
@@ -98,6 +108,7 @@ class Weapon : public Item
     Weapon(string _name, int _price, int _base_level, int _damage, int _hands);
     //virtual float get_boost() = 0;
     //virtual void use_the_potion() = 0;
+    int getHands();
     ~Weapon();
 };
 
@@ -108,6 +119,7 @@ class Armor : public Item
 
   public:
     Armor(string _name, int _price, int _base_level, int _dmg_reduction);
+    int getHands();
     ~Armor();
 };
 
@@ -120,6 +132,7 @@ class StrengthPotion : public Item
     StrengthPotion(string _name, int _price, int _base_level, float _boost);
     float get_boost() const;
     //void use_the_potion(&Hero my_hero);
+    int getHands();
     ~StrengthPotion();
 };
 
@@ -132,6 +145,7 @@ class DexterityPotion : public Item
     DexterityPotion(string _name, int _price, int _base_level, float _boost);
     float get_boost() const;
     //void use_the_potion(&Hero my_hero);
+    int getHands();
     ~DexterityPotion();
 };
 
@@ -144,6 +158,7 @@ class AgilityPotion : public Item
     AgilityPotion(string _name, int _price, int _base_level, float _boost);
     float get_boost() const;
     //void use_the_potion(&Hero my_hero);
+    int getHands();
     ~AgilityPotion();
 };
 
@@ -201,6 +216,7 @@ class Living
     Living(string _name, int _level, int _healthPower);
     string get_name() const;
     int get_Level() const;
+    int get_HP();
     ~Living();
 };
 
@@ -211,6 +227,7 @@ class Hero : public Living
     float strength, dexterity, agility;
     vector<Item *> inventory_items;
     vector<Spell *> inventory_spells;
+    Equipment my_equipment;
 
   public:
     Hero(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience);
@@ -233,6 +250,10 @@ class Hero : public Living
     void setMoney(int);
     int getLevel() const;
     string getName() const;
+    int getHP();
+    void displayStats();
+    void Equip();
+    void displayEquipment();
     ~Hero();
 };
 
@@ -342,5 +363,7 @@ class Grid
     void Menu();
     void BuyFromMarket();
     void SelltoMarket();
+    void displayHeroStats();
+    void HeroToEquip();
     ~Grid();
 };
