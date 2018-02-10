@@ -234,7 +234,7 @@ void Hero::remove_inventoryItem()
                 money = inventory_items[i]->getPrice()/2;
                 setMoney(getMoney() + inventory_items[i]->getPrice()/2);
                 inventory_items.erase(inventory_items.begin() + i);
-                cout << item_name << " has been sold for " << money << endl;
+                cout << item_name << " has been sold for " << money << "." << endl;
                 sold = true;
                 break;
             }
@@ -862,11 +862,8 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *weapon_ptr = new Weapon((*it).name, (*it).price, (*it).base_level, (*it).damage, (*it).hands);
-                        for (int j = 0; j < my_heroes.size(); j++)
-                        {
                             my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                             my_heroes[hero_number]->add_inventoryItem(weapon_ptr);
-                        }
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
 
@@ -896,11 +893,8 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *armor_ptr = new Armor((*it).name, (*it).price, (*it).base_level, (*it).dmg_reduction);
-                        for (int j = 0; j < my_heroes.size(); j++)
-                        {
                             my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                             my_heroes[hero_number]->add_inventoryItem(armor_ptr);
-                        }
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
@@ -935,11 +929,8 @@ void Grid::BuyFromMarket()
                             potion_ptr = new DexterityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
                         else
                             potion_ptr = new AgilityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
-                        for (int j = 0; j < my_heroes.size(); j++)
-                        {
                             my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                             my_heroes[hero_number]->add_inventoryItem(potion_ptr);
-                        }
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
@@ -974,11 +965,8 @@ void Grid::BuyFromMarket()
                             spell_ptr = new FireSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
                         else
                             spell_ptr = new LightingSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
-                        for (int j = 0; j < my_heroes.size(); j++)
-                        {
                             my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                             my_heroes[hero_number]->add_inventorySpell(spell_ptr);
-                        }
                         cout << endl
                              << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         break;
