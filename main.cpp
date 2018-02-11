@@ -7,6 +7,7 @@
 using namespace std;
 
 int main() {
+    srand(time(NULL));
     welcome();
     Grid *my_grid = new Grid(6, 6, 3);
     my_grid->Menu();

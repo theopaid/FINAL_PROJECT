@@ -6,7 +6,7 @@ using namespace std;
 
 void welcome();
 
-class Item;
+class Item; // Forward Declaration
 class Hero;
 
 struct Equipment
@@ -97,6 +97,8 @@ class Item
     virtual float get_boost() = 0;
     //virtual void use_the_potion() = 0;
     virtual int getHands() = 0;
+    virtual int get_dmg_red();
+    virtual int get_dmg();
     virtual ~Item();
 };
 
@@ -110,6 +112,7 @@ class Weapon : public Item
     virtual float get_boost();
     //virtual void use_the_potion() = 0;
     int getHands();
+    int get_dmg();
     ~Weapon();
 };
 
@@ -121,7 +124,9 @@ class Armor : public Item
   public:
     Armor(string _name, int _price, int _base_level, int _dmg_reduction);
     virtual float get_boost();
+    int get_dmg_red();
     int getHands();
+    int get_dmg_var();
     ~Armor();
 };
 
@@ -219,6 +224,7 @@ class Living
     string get_name() const;
     int get_Level() const;
     int get_HP();
+    void set_HP(int );
     ~Living();
 };
 
@@ -244,7 +250,7 @@ class Hero : public Living
     void add_boost_to_strength(float boost);
     void add_boost_to_dexterity(float boost);
     void add_boost_to_agility(float boost);
-    void add_inventoryItem(Item *);
+    bool add_inventoryItem(Item *);
     void add_inventorySpell(Spell *);
     void remove_inventoryItem();
     void show_inventory();
@@ -253,6 +259,12 @@ class Hero : public Living
     int getLevel() const;
     string getName() const;
     int getHP();
+    void setHP(int );
+    int getMP();
+    void setMP(int );
+    int getEXP();
+    void setEXP(int );
+    Equipment getEquipment();
     void displayStats();
     void Equip();
     void displayEquipment();
@@ -310,6 +322,7 @@ class Monster : public Living
     void set_defense(int new_defence);
     float get_dodge_possibility() const;
     void set_dodge_possibility(float new_dodgepos);
+    void displayStats();
     ~Monster();
 };
 
@@ -319,7 +332,7 @@ class Dragon : public Monster
     static const int dmg_var_boost = 20.0 / 100.0;
 
   public:
-    Dragon(string _name, int _level, int _healthPower, int _damage_var, int _defense, int _dodge_possibility);
+    Dragon(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility);
     ~Dragon();
 };
 
@@ -329,7 +342,7 @@ class Exoskeleton : public Monster
     static const int defense_boost = 20.0 / 100.0;
 
   public:
-    Exoskeleton(string _name, int _level, int _healthPower, int _damage_var, int _defense, int _dodge_possibility);
+    Exoskeleton(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility);
     ~Exoskeleton();
 };
 
@@ -354,12 +367,14 @@ class Grid
     list<WeaponNode> WeaponList;
     list<ArmorNode> ArmorList;
     vector<Hero *> my_heroes;
+    vector<Monster *> my_monsters;
 
   public:
     Grid(int _x, int _y, int _heroes_count);
     void createMap(int, int);
     void displayMap();
     void createHero();
+    void createMonsters();
     void move();
     void createMarket();
     void show_market();
@@ -367,7 +382,12 @@ class Grid
     void BuyFromMarket();
     void SelltoMarket();
     void displayHeroStats();
+    void displayMonsterStats();
     void HeroToEquip();
     void HeroToUsePotion();
+    bool ChanceToFight();
+    void FightMenu(Hero* );
+    void Fight();
+    void Attack(Hero* );
     ~Grid();
 };
