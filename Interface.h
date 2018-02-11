@@ -7,6 +7,7 @@ using namespace std;
 void welcome();
 
 class Item;
+class Hero;
 
 struct Equipment
 {
@@ -93,7 +94,7 @@ class Item
     void set_type(TypeOfItem);
     string getName();
     int getPrice();
-    //virtual float get_boost() = 0;
+    virtual float get_boost() = 0;
     //virtual void use_the_potion() = 0;
     virtual int getHands() = 0;
     virtual ~Item();
@@ -106,7 +107,7 @@ class Weapon : public Item
 
   public:
     Weapon(string _name, int _price, int _base_level, int _damage, int _hands);
-    //virtual float get_boost() = 0;
+    virtual float get_boost();
     //virtual void use_the_potion() = 0;
     int getHands();
     ~Weapon();
@@ -119,6 +120,7 @@ class Armor : public Item
 
   public:
     Armor(string _name, int _price, int _base_level, int _dmg_reduction);
+    virtual float get_boost();
     int getHands();
     ~Armor();
 };
@@ -130,8 +132,8 @@ class StrengthPotion : public Item
 
   public:
     StrengthPotion(string _name, int _price, int _base_level, float _boost);
-    float get_boost() const;
-    //void use_the_potion(&Hero my_hero);
+    float get_boost();
+    //void use_the_potion(Hero& );
     int getHands();
     ~StrengthPotion();
 };
@@ -143,8 +145,8 @@ class DexterityPotion : public Item
 
   public:
     DexterityPotion(string _name, int _price, int _base_level, float _boost);
-    float get_boost() const;
-    //void use_the_potion(&Hero my_hero);
+    float get_boost();
+    //void use_the_potion(Hero& );
     int getHands();
     ~DexterityPotion();
 };
@@ -156,8 +158,8 @@ class AgilityPotion : public Item
 
   public:
     AgilityPotion(string _name, int _price, int _base_level, float _boost);
-    float get_boost() const;
-    //void use_the_potion(&Hero my_hero);
+    float get_boost();
+    //void use_the_potion(Hero& );
     int getHands();
     ~AgilityPotion();
 };
@@ -254,6 +256,7 @@ class Hero : public Living
     void displayStats();
     void Equip();
     void displayEquipment();
+    void usePotion();
     ~Hero();
 };
 
@@ -365,5 +368,6 @@ class Grid
     void SelltoMarket();
     void displayHeroStats();
     void HeroToEquip();
+    void HeroToUsePotion();
     ~Grid();
 };

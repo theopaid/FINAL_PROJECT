@@ -48,6 +48,8 @@ int Weapon::getHands()
     return hands;
 }
 
+float Weapon::get_boost() {}
+
 Weapon::~Weapon() {}
 
 // Class Armor
@@ -59,6 +61,8 @@ Armor::Armor(string _name, int _price, int _base_level, int _dmg_reduction)
 
 int Armor::getHands() {}
 
+float Armor::get_boost() {}
+
 Armor::~Armor() {}
 
 // Class StrengthPotion
@@ -68,22 +72,19 @@ StrengthPotion::StrengthPotion(string _name, int _price, int _base_level, float 
     Item::set_type(strength_potion);
 }
 
-float StrengthPotion::get_boost() const
+float StrengthPotion::get_boost()
 {
     return boost;
 }
 
-/*void StrengthPotion::use_the_potion(&Hero my_hero)
+/*void StrengthPotion::use_the_potion(Hero& my_hero)
 {
     my_hero.add_boost_to_strength(boost);
 }*/
 
 int StrengthPotion::getHands() {}
 
-StrengthPotion::~StrengthPotion()
-{
-    cout << "Hurray! You used all of the Strength Potion." << endl;
-}
+StrengthPotion::~StrengthPotion() {}
 
 // Class DexterityPotion
 DexterityPotion::DexterityPotion(string _name, int _price, int _base_level, float _boost)
@@ -92,22 +93,19 @@ DexterityPotion::DexterityPotion(string _name, int _price, int _base_level, floa
     Item::set_type(dexterity_potion);
 }
 
-float DexterityPotion::get_boost() const
+float DexterityPotion::get_boost()
 {
     return boost;
 }
 
-/*void DexterityPotion::use_the_potion(&Hero my_hero)
+/*void DexterityPotion::use_the_potion(Hero& my_hero)
 {
     my_hero.add_boost_to_strength(boost);
 }*/
 
 int DexterityPotion::getHands() {}
 
-DexterityPotion::~DexterityPotion()
-{
-    cout << "Hurray! You used all of the Dexterity Potion." << endl;
-}
+DexterityPotion::~DexterityPotion() {}
 
 // Class Agility Potion
 AgilityPotion::AgilityPotion(string _name, int _price, int _base_level, float _boost)
@@ -116,22 +114,19 @@ AgilityPotion::AgilityPotion(string _name, int _price, int _base_level, float _b
     Item::set_type(agility_potion);
 }
 
-float AgilityPotion::get_boost() const
+float AgilityPotion::get_boost()
 {
     return boost;
 }
 
-/*void AgilityPotion::use_the_potion(&Hero my_hero)
+/*void AgilityPotion::use_the_potion(Hero& my_hero)
 {
     my_hero.add_boost_to_strength(boost);
 }*/
 
 int AgilityPotion::getHands() {}
 
-AgilityPotion::~AgilityPotion()
-{
-    cout << "Hurray! You used all of the Agility Potion." << endl;
-}
+AgilityPotion::~AgilityPotion() {}
 
 // Class Spell
 Spell::Spell(string _name, int _price, int _base_level, int _dmg_var, int _mana)
@@ -260,11 +255,11 @@ void Hero::remove_inventoryItem()
             {
                 money = inventory_items[i]->getPrice() / 2;
                 setMoney(getMoney() + inventory_items[i]->getPrice() / 2);
-                if(inventory_items[i] == my_equipment.hand1)
+                if (inventory_items[i] == my_equipment.hand1)
                     my_equipment.hand1 = NULL;
-                if(inventory_items[i] == my_equipment.hand2)
+                if (inventory_items[i] == my_equipment.hand2)
                     my_equipment.hand2 = NULL;
-                if(inventory_items[i] == my_equipment.armor)
+                if (inventory_items[i] == my_equipment.armor)
                     my_equipment.armor = NULL;
                 delete inventory_items[i];
                 inventory_items.erase(inventory_items.begin() + i);
@@ -372,6 +367,17 @@ void Hero::Equip()
         cout << "There are no items in " << getName() << "'s inventory!" << endl;
         return;
     }
+    bool itemflag = false;
+    for(int i=0; i<inventory_items.size(); i++) {
+        if(inventory_items[i]->get_type() == 0 || inventory_items[i]->get_type() == 1) {
+            itemflag = true;
+            break;
+        }
+    }
+    if(!itemflag) {
+        cout << "There are no Weapons or Armors in your Inventory" << endl;
+        return;
+    }
     show_inventory();
     string item_name;
     bool equipped = false;
@@ -396,7 +402,8 @@ void Hero::Equip()
                     }
                     if (inventory_items[i]->getHands() == 1)
                     {
-                        if(inventory_items[i] == my_equipment.hand1 || inventory_items[i] == my_equipment.hand1){
+                        if (inventory_items[i] == my_equipment.hand1 || inventory_items[i] == my_equipment.hand1)
+                        {
                             cout << "This Item is already equipped!" << endl;
                             return;
                         }
@@ -432,7 +439,7 @@ void Hero::Equip()
                     cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s armor" << endl;
                 }
                 else
-                {
+                { // Potion
                     cout << "This item is a Potion, therefore it can't be equipped!" << endl;
                 }
                 equipped = true;
@@ -441,6 +448,76 @@ void Hero::Equip()
         }
         if (!equipped)
             cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
+    }
+}
+
+void Hero::usePotion()
+{
+    if (inventory_items.size() == 0)
+    {
+        cout << "There are no items in " << getName() << "'s inventory!" << endl;
+        return;
+    }
+    bool potionflag = false;
+    for(int i=0; i<inventory_items.size(); i++) {
+        if(inventory_items[i]->get_type() == 2 || inventory_items[i]->get_type() == 3 || inventory_items[i]->get_type() == 4) {
+            potionflag = true;
+            break;
+        }
+    }
+    if(!potionflag) {
+        cout << "There are no Potions in your Inventory" << endl;
+        return;
+    }
+    show_inventory();
+    string item_name;
+    bool used = false;
+    int money;
+    while (!used)
+    {
+        cout << endl
+             << "Type the name of the potion you want to use:";
+        cin >> item_name;
+        cout << endl;
+        for (int i = 0; i < inventory_items.size(); i++)
+        {
+            if (item_name == inventory_items[i]->getName())
+            {
+                if (inventory_items[i]->get_type() == 0)
+                { // Weapon
+                    cout << "This item is a Weapon, therefore in can't be consumed!" << endl;
+                }
+                else if (inventory_items[i]->get_type() == 1)
+                { // Armor
+                    cout << "This item is an Armor, therefore in can't be consumed!" << endl;
+                }
+                else
+                { // Potion
+                    if(inventory_items[i]->get_type() == 2) {
+                        strength = strength * (1 + inventory_items[i]->get_boost());
+                        cout << "Hurray! You used all of the Strength Potion." << endl;
+                        delete inventory_items[i];
+                        inventory_items.erase(inventory_items.begin() + i);
+                    }
+                    else if(inventory_items[i]->get_type() == 3) {
+                        dexterity = dexterity * (1 + inventory_items[i]->get_boost());
+                        cout << "Hurray! You used all of the Strength Potion." << endl;
+                        delete inventory_items[i];
+                        inventory_items.erase(inventory_items.begin() + i);
+                    }
+                    else if(inventory_items[i]->get_type() == 4) {
+                        agility = agility * (1 + inventory_items[i]->get_boost());
+                        cout << "Hurray! You used all of the Strength Potion." << endl;
+                        delete inventory_items[i];
+                        inventory_items.erase(inventory_items.begin() + i);
+                    }
+                }
+                used = true;
+                break;
+            }
+        }
+        if (!used)
+            cout << "The name of the Potion is not listed. Please TRY AGAIN" << endl;
     }
 }
 
@@ -942,6 +1019,7 @@ void Grid::Menu()
              << "8 - Equip an item" << endl
              << "9 - Display Equipment" << endl
              << "10 - Quit the Game" << endl
+             << "11 - Use a Potion" << endl
              << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
@@ -979,6 +1057,9 @@ void Grid::Menu()
         case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
             exit(0);
+        case 11:
+            HeroToUsePotion();
+            break;
         default:
             cout << "Your input was wrong. Please TRY AGAIN." << endl;
             break;
@@ -1016,6 +1097,36 @@ void Grid::HeroToEquip()
         }
     }
     my_heroes[hero_number]->Equip();
+}
+
+void Grid::HeroToUsePotion()
+{
+    int hero_number = 0;
+    if (my_heroes.size() > 1)
+    {
+        string hero_input;
+        bool flag = false;
+        while (!flag)
+        {
+            hero_number = 0;
+            cout << "Type the name of the hero you want to use a Potion on:";
+            cin >> hero_input;
+            cout << endl;
+            for (int i = 0; i < my_heroes.size(); i++)
+            {
+                if (hero_input == my_heroes[i]->getName())
+                {
+                    flag = true;
+                    break;
+                }
+                hero_number++;
+            }
+            if (flag == false)
+                cout << endl
+                     << "There is no Hero named this way, please TRY AGAIN" << endl;
+        }
+    }
+    my_heroes[hero_number]->usePotion();
 }
 
 void Grid::displayHeroStats()
