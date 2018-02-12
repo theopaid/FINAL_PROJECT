@@ -34,12 +34,12 @@ int Item::getPrice()
     return price;
 }
 
-int Item::get_dmg_red() {
-
+int Item::get_dmg_red()
+{
 }
 
-int Item::get_dmg() {
-
+int Item::get_dmg()
+{
 }
 
 Item::~Item() {}
@@ -58,7 +58,8 @@ int Weapon::getHands()
 
 float Weapon::get_boost() {}
 
-int Weapon::get_dmg() {
+int Weapon::get_dmg()
+{
     return damage;
 }
 
@@ -75,7 +76,8 @@ int Armor::getHands() {}
 
 float Armor::get_boost() {}
 
-int Armor::get_dmg_red() {
+int Armor::get_dmg_red()
+{
     return dmg_reduction;
 }
 
@@ -205,7 +207,8 @@ int Living::get_HP()
     return healthPower;
 }
 
-void Living::set_HP(int _hp) {
+void Living::set_HP(int _hp)
+{
     healthPower = _hp;
 }
 
@@ -353,24 +356,34 @@ int Hero::getHP()
     return Living::get_HP();
 }
 
-void Hero::setHP(int _hp) {
+void Hero::setHP(int _hp)
+{
     Living::set_HP(_hp);
 }
 
-int Hero::getMP() {
+int Hero::getMP()
+{
     return magicPower;
 }
 
-void Hero::setMP(int _mp) {
+void Hero::setMP(int _mp)
+{
     magicPower = _mp;
 }
 
-int Hero::getEXP() {
+int Hero::getEXP()
+{
     return experience;
 }
 
-void Hero::setEXP(int _xp) {
+void Hero::setEXP(int _xp)
+{
     experience = _xp;
+}
+
+vector<Item *> Hero::getInventory()
+{
+    return inventory_items;
 }
 
 void Hero::displayStats()
@@ -384,6 +397,7 @@ void Hero::displayStats()
          << "Money balance : " << getMoney() << endl
          << "Level : " << getLevel() << endl
          << "Experience : " << experience << endl
+         << endl
          << endl;
 }
 
@@ -579,7 +593,8 @@ void Hero::usePotion()
     }
 }
 
-Equipment Hero::getEquipment() {
+Equipment Hero::getEquipment()
+{
     return my_equipment;
 }
 
@@ -665,7 +680,8 @@ void Monster::set_dodge_possibility(float new_dodgepos)
     dodge_possibility = new_dodgepos;
 }
 
-void Monster::displayStats() {
+void Monster::displayStats()
+{
     cout << get_name() << "'s Stats:" << endl
          << "Health Power : " << get_HP() << endl
          << "Level : " << get_Level() << endl
@@ -1086,27 +1102,28 @@ void Grid::createHero()
 void Grid::createMonsters()
 {
     int monsters_to_create = rand() % my_heroes.size() + 1;
-    int multiplier = 1 + 0.2*(my_heroes[0]->getLevel() - 1);
-    Monster* monster_ptr;
+    int multiplier = 1 + 0.2 * (my_heroes[0]->getLevel() - 1);
+    Monster *monster_ptr;
     for (int i = 0; i < monsters_to_create; i++)
     {
         int monster_type = rand() % 3 + 1;
-        switch(monster_type) {
-            case 1:
-                cout << "A Dragon has been found!" << endl;
-                monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70*multiplier, 25, 5*multiplier, 0.2);
-                my_monsters.push_back(monster_ptr);
-                break;
-            case 2:
-                cout << "An Exoskeleton has been found!" << endl;
-                monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70*multiplier, 25, 5*multiplier, 0.2);
-                my_monsters.push_back(monster_ptr);
-                break;
-            case 3:
-                cout << "A Spirit has been found!" << endl;
-                monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70*multiplier, 25, 5*multiplier, 0.2);
-                my_monsters.push_back(monster_ptr);
-                break;
+        switch (monster_type)
+        {
+        case 1:
+            cout << "====> A Dragon has been found! <====" << endl;
+            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70 * multiplier, 25, 2 * multiplier, 0.2);
+            my_monsters.push_back(monster_ptr);
+            break;
+        case 2:
+            cout << "====> An Exoskeleton has been found! <====" << endl;
+            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 25, 2 * multiplier, 0.2);
+            my_monsters.push_back(monster_ptr);
+            break;
+        case 3:
+            cout << "====> A Spirit has been found! <====" << endl;
+            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 25, 2 * multiplier, 0.2);
+            my_monsters.push_back(monster_ptr);
+            break;
         }
     }
 }
@@ -1249,7 +1266,8 @@ void Grid::displayHeroStats()
     }
 }
 
-void Grid::displayMonsterStats() {
+void Grid::displayMonsterStats()
+{
     for (int i = 0; i < my_monsters.size(); i++)
     {
         my_monsters[i]->displayStats();
@@ -1295,7 +1313,7 @@ void Grid::BuyFromMarket()
         int i;
         cin.clear();
         cin.ignore(INT_MAX, '\n');
-        cout << "Select an Item or a Spell you want to buy : ";
+        cout << "Select an Item or a Spell you want to buy (type 0 to cancel the transaction) : ";
         if (cin >> input)
         {
             if (input <= 5)
@@ -1330,6 +1348,10 @@ void Grid::BuyFromMarket()
                     i++;
                 }
                 break;
+            }
+            else if (input == 0)
+            {
+                return;
             }
             else if (input <= 10)
             {
@@ -1487,26 +1509,27 @@ bool Grid::ChanceToFight()
         return false;
 }
 
-void Grid::FightMenu(Hero* hero_ptr)
+void Grid::FightMenu(Hero *hero_ptr)
 {
     int input;
     while (true)
     {
         cout << endl
              << "////////// FIGHT MENU //////////" << endl
-             << endl << "Playing with " << hero_ptr->get_name() << endl
+             << endl
+             << "=====> Playing with " << hero_ptr->get_name() << " <=====" << endl
+             << endl
              << "Here are the options you have : " << endl
              << "1 - Display the Map" << endl
              << "2 - Check the Inventory" << endl
              << "3 - Display the stats of your Hero(s)" << endl
              << "4 - Attack" << endl
              << "5 - Cast Spell" << endl
-             << "6 - " << endl
-             << "7 - " << endl
-             << "8 - Equip an item" << endl
-             << "9 - Display Equipment" << endl
+             << "6 - Use a Potion" << endl
+             << "7 - Equip an item" << endl
+             << "8 - Display Equipment" << endl
+             << "9 - Display Spell in your Inventory" << endl
              << "10 - Quit the Game" << endl
-             << "11 - Use a Potion" << endl
              << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
@@ -1526,26 +1549,28 @@ void Grid::FightMenu(Hero* hero_ptr)
             Attack(hero_ptr);
             break;
         case 5:
-            
+
             break;
         case 6:
-            
+            for (int i = 0; hero_ptr->getInventory().size(); i++)
+            {
+                if (hero_ptr->getInventory()[i]->get_type() != weapon && hero_ptr->getInventory()[i]->get_type() != armor)
+                {
+                    cout << "You have no potion in your inventory!" << endl;
+                    continue;
+                }
+            }
+            hero_ptr->usePotion();
             break;
         case 7:
-            
+            hero_ptr->Equip();
             break;
         case 8:
-            HeroToEquip();
-            break;
-        case 9:
             hero_ptr->displayEquipment();
             continue;
         case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
             exit(0);
-        case 11:
-            hero_ptr->usePotion();
-            break;
         default:
             cout << "Your input was wrong. Please TRY AGAIN." << endl;
             break;
@@ -1556,12 +1581,16 @@ void Grid::FightMenu(Hero* hero_ptr)
     }
 }
 
-void Grid::Attack(Hero* hero_ptr) {
+void Grid::Attack(Hero *hero_ptr)
+{
     int monster_number = 0;
     if (my_monsters.size() > 1)
     {
         string monster_input;
         bool flag = false;
+        cout << "Here are the monsters you can attack:" << endl;
+        for (int k = 0; k < my_monsters.size(); k++)
+            cout << my_monsters[k]->get_name() << endl;
         while (!flag)
         {
             monster_number = 0;
@@ -1583,7 +1612,7 @@ void Grid::Attack(Hero* hero_ptr) {
         }
     }
     int damage;
-    if(!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0))
+    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0))
     {
         if (hero_ptr->getEquipment().hand1 != NULL && hero_ptr->getEquipment().hand2 != NULL)
             damage = hero_ptr->get_strength() * (hero_ptr->getEquipment().hand1->get_dmg() + hero_ptr->getEquipment().hand2->get_dmg());
@@ -1592,19 +1621,26 @@ void Grid::Attack(Hero* hero_ptr) {
         else if (hero_ptr->getEquipment().hand1 == NULL && hero_ptr->getEquipment().hand2 != NULL)
             damage = hero_ptr->get_strength() * (hero_ptr->getEquipment().hand2->get_dmg());
         my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.05);
+        cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.05 << " hit points" << endl;
+        if (my_monsters[monster_number]->get_HP() < 0)
+            my_monsters[monster_number]->set_HP(0);
+        if (my_monsters[monster_number]->get_HP() == 0)
+            cout << "===> " << my_monsters[monster_number]->get_name() << " is dead" << endl;
     }
     else
-        cout << "The attack of the Hero was dodged by the Monster" << endl;
+        cout << "====> " << hero_ptr->get_name() << "'s attack was dodged by " << my_monsters[monster_number]->get_name() << endl;
 }
 
-void Grid::Fight() {
+void Grid::Fight()
+{
     createMonsters();
     bool flag_heroes_win = false;
     bool flag_monsters_win = false;
     int monsters_with_hp_0_counter;
     int heroes_with_hp_0_counter;
 
-    while(!(flag_heroes_win || flag_monsters_win)) {
+    while (!(flag_heroes_win || flag_monsters_win))
+    {
         for (int i = 0; i < my_heroes.size(); i++)
         {
 
@@ -1627,17 +1663,26 @@ void Grid::Fight() {
             for (int i = 0; i < my_monsters.size(); i++)
             {
                 int monster_dmg = my_monsters[i]->get_damage_var() + (rand() % 16);
-                int which_hero_to_attack = rand() % my_heroes.size();
+                int which_hero_to_attack;
+                while (true)
+                { // So the monster can't pick a hero with 0 hp to attack
+                    which_hero_to_attack = rand() % my_heroes.size();
+                    if (my_heroes[which_hero_to_attack]->get_HP() != 0)
+                        break;
+                }
                 if (!((rand() % 100 + 1) <= my_heroes[which_hero_to_attack]->get_agility() * 100.0))
                 { // Posibility to dodge the monster attack
                     if (my_heroes[which_hero_to_attack]->getEquipment().armor != NULL)
                         monster_dmg = monster_dmg - float(monster_dmg) * (float(my_heroes[which_hero_to_attack]->getEquipment().armor->get_dmg_red()) / 100.0);
                     my_heroes[which_hero_to_attack]->setHP(my_heroes[which_hero_to_attack]->getHP() - monster_dmg);
+                    cout << "====> " << my_monsters[i]->get_name() << " damaged " << my_heroes[which_hero_to_attack]->get_name() << " for " << monster_dmg << " hit points" << endl;
                     if (my_heroes[which_hero_to_attack]->getHP() < 0)
                         my_heroes[which_hero_to_attack]->setHP(0);
+                    if (my_heroes[which_hero_to_attack]->getHP() == 0)
+                        cout << "===> " << my_heroes[which_hero_to_attack]->get_name() << " is dead" << endl;
                 }
                 else
-                    cout << "The attack of the Monster was dodged by the Hero" << endl;
+                    cout << "====> " << my_monsters[i]->get_name() << "'s attack was dodged by " << my_heroes[which_hero_to_attack]->get_name() << endl;
                 heroes_with_hp_0_counter = 0;
                 for (int j = 0; j < my_heroes.size(); j++)
                 {
@@ -1651,58 +1696,78 @@ void Grid::Fight() {
                 }
             }
         }
-        if(!(flag_heroes_win || flag_monsters_win)) {
+        if (!(flag_heroes_win || flag_monsters_win))
+        {
             cout << "Monsters's turn completed" << endl;
             cout << "Heroes and Monsters are getting healed.." << endl;
             for (int j = 0; j < my_heroes.size(); j++)
             {
                 if (my_heroes[j]->getHP() != 0)
                 {
+                    if (my_heroes[j]->get_HP() < 70)
+                        cout << "====> " << my_heroes[j]->get_name() << " restored " << my_heroes[j]->getHP() * (0.20) << " health power" << endl;
                     my_heroes[j]->setHP(my_heroes[j]->getHP() * (1.20));
                     if (my_heroes[j]->getHP() > 70)
                         my_heroes[j]->setHP(70);
+                    if (my_heroes[j]->get_HP() < 70)
+                        cout << "====> " << my_heroes[j]->get_name() << " restored " << my_heroes[j]->getMP() * (0.20) << " mana" << endl;
                     my_heroes[j]->setMP(my_heroes[j]->getMP() * (1.20));
                     if (my_heroes[j]->getMP() > 70)
                         my_heroes[j]->setMP(70);
                 }
             }
-            int multiplier = 1 + 0.2*(my_heroes[0]->getLevel() - 1);
+            int multiplier = 1 + 0.2 * (my_heroes[0]->getLevel() - 1);
             for (int j = 0; j < my_monsters.size(); j++)
             {
                 if (my_monsters[j]->get_HP() != 0)
                 {
+                    if (my_heroes[j]->get_HP() < 70 * multiplier)
+                        cout << "====> " << my_monsters[j]->get_name() << " restored " << my_monsters[j]->get_HP() * (0.20) << " health power" << endl;
                     my_monsters[j]->set_HP(my_monsters[j]->get_HP() * (1.20));
-                    if (my_monsters[j]->get_HP() > 70*multiplier)
-                        my_monsters[j]->set_HP(70*multiplier);
+                    if (my_monsters[j]->get_HP() > 70 * multiplier)
+                        my_monsters[j]->set_HP(70 * multiplier);
                 }
             }
         }
-        else if(flag_monsters_win){
+        else if (flag_monsters_win)
+        {
             cout << "Monsters won!" << endl;
-            for(int j=0; j<my_heroes.size(); j++) {
-                my_heroes[j]->setMoney(my_heroes[j]->getMoney()/2);
+            for (int j = 0; j < my_heroes.size(); j++)
+            {
+                my_heroes[j]->setMoney(my_heroes[j]->getMoney() / 2);
                 my_heroes[j]->setHP(70);
                 my_heroes[j]->setMP(70);
             }
         }
-        else if(flag_heroes_win) {
+        else if (flag_heroes_win)
+        {
             cout << "Heroes won!" << endl;
-            for(int j=0; j<my_heroes.size(); j++) {
-                my_heroes[j]->setMoney(my_heroes[j]->getMoney() + my_heroes[0]->get_Level()*10 + my_monsters.size()*5);
-                my_heroes[j]->setEXP(my_heroes[j]->getEXP() + 25*my_monsters.size());
+            for (int j = 0; j < my_heroes.size(); j++)
+            {
+                my_heroes[j]->setMoney(my_heroes[j]->getMoney() + my_heroes[0]->get_Level() * 10 + my_monsters.size() * 5);
+                my_heroes[j]->setEXP(my_heroes[j]->getEXP() + 25 * my_monsters.size());
+                if (my_heroes[j]->get_HP() == 0)
+                {
+                    my_heroes[j]->setHP(35);
+                    my_heroes[j]->setMP(70);
+                }
             }
         }
     }
     cout << "The fight is over" << endl;
 
-    int  monsters_counter = my_monsters.size();
-    for(int i=0; i<monsters_counter; i++) {
+    int monsters_counter = my_monsters.size();
+    for (int i = 0; i < monsters_counter; i++)
+    {
         delete my_monsters[i];
     }
     my_monsters.clear();
-    for(int j=0; j<my_heroes.size(); j++) {
-        for(int i=1; i<=5; i++) {
-            if((my_heroes[j]->getEXP()) >= 100*i && (my_heroes[j]->get_Level()<i)) {
+    for (int j = 0; j < my_heroes.size(); j++)
+    {
+        for (int i = 1; i <= 5; i++)
+        {
+            if ((my_heroes[j]->getEXP()) >= 100 * i && (my_heroes[j]->get_Level() < i))
+            {
                 my_heroes[j]->LevelUp();
             }
         }

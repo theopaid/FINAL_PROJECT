@@ -265,6 +265,7 @@ class Hero : public Living
     int getEXP();
     void setEXP(int );
     Equipment getEquipment();
+    vector<Item *> getInventory();
     void displayStats();
     void Equip();
     void displayEquipment();
