@@ -223,6 +223,7 @@ class Living
     Living(string _name, int _level, int _healthPower);
     string get_name() const;
     int get_Level() const;
+    void set_level(int );
     int get_HP();
     void set_HP(int );
     ~Living();

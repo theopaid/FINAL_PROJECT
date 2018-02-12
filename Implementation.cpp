@@ -202,6 +202,10 @@ int Living::get_Level() const
     return level;
 }
 
+void Living::set_level(int _lvl) {
+    level = _lvl;
+}
+
 int Living::get_HP()
 {
     return healthPower;
@@ -253,6 +257,7 @@ bool Hero::add_inventoryItem(Item *my_item)
     {
         if (inventory_items[i]->getName() == my_item->getName())
         {
+            delete my_item;
             cout << "This item is already in your inventory!" << endl;
             return false;
         }
@@ -615,6 +620,7 @@ void Warrior::LevelUp()
     strength = strength + strength * (35.0 / 100.0);
     agility = agility + agility * (30.0 / 100.0);
     dexterity = dexterity + dexterity * (25.0 / 100.0);
+    set_level(get_Level() + 1);
 }
 Warrior::~Warrior() {}
 
@@ -631,6 +637,7 @@ void Sorcerer::LevelUp()
     strength = strength + strength * (25.0 / 100.0);
     agility = agility + agility * (30.0 / 100.0);
     dexterity = dexterity + dexterity * (35.0 / 100.0);
+    set_level(get_Level() + 1);
 }
 
 Sorcerer::~Sorcerer() {}
@@ -648,6 +655,7 @@ void Paladin::LevelUp()
     strength = strength + strength * (35.0 / 100.0);
     agility = agility + agility * (25.0 / 100.0);
     dexterity = dexterity + dexterity * (30.0 / 100.0);
+    set_level(get_Level() + 1);
 }
 
 Paladin::~Paladin() {}
@@ -1336,10 +1344,11 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *weapon_ptr = new Weapon((*it).name, (*it).price, (*it).base_level, (*it).damage, (*it).hands);
-                        my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                        //my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                         bool added = my_heroes[hero_number]->add_inventoryItem(weapon_ptr);
                         if (added)
                         {
+                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                             cout << endl
                                  << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
                         }
@@ -1522,7 +1531,7 @@ void Grid::FightMenu(Hero *hero_ptr)
              << "Here are the options you have : " << endl
              << "1 - Display the Map" << endl
              << "2 - Check the Inventory" << endl
-             << "3 - Display the stats of your Hero(s)" << endl
+             << "3 - Display the stats of your Hero(s) and the Monsters" << endl
              << "4 - Attack" << endl
              << "5 - Cast Spell" << endl
              << "6 - Use a Potion" << endl
@@ -1709,7 +1718,7 @@ void Grid::Fight()
                     my_heroes[j]->setHP(my_heroes[j]->getHP() * (1.20));
                     if (my_heroes[j]->getHP() > 70)
                         my_heroes[j]->setHP(70);
-                    if (my_heroes[j]->get_HP() < 70)
+                    if (my_heroes[j]->get_MP() < 70)
                         cout << "====> " << my_heroes[j]->get_name() << " restored " << my_heroes[j]->getMP() * (0.20) << " mana" << endl;
                     my_heroes[j]->setMP(my_heroes[j]->getMP() * (1.20));
                     if (my_heroes[j]->getMP() > 70)
