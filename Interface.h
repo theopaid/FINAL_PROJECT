@@ -183,6 +183,7 @@ class Spell
     string getName();
     int get_dmg_var();
     int get_mana();
+    virtual int spell_poisoning() = 0;
     ~Spell();
 };
 
@@ -193,6 +194,7 @@ class IceSpell : public Spell
 
   public:
     IceSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _dmg_var_reduction);
+    int spell_poisoning();
     ~IceSpell();
 };
 
@@ -203,6 +205,7 @@ class FireSpell : public Spell
 
   public:
     FireSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _armor_reduction);
+    int spell_poisoning();
     ~FireSpell();
 };
 
@@ -213,6 +216,7 @@ class LightingSpell : public Spell
 
   public:
     LightingSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _dodge_reduction);
+    int spell_poisoning();
     ~LightingSpell();
 };
 
@@ -318,16 +322,18 @@ class Paladin : public Hero
 class Monster : public Living
 {
   private:
-    int damage_var, defense;
-    float dodge_possibility;
+    int damage_var;
+    float dodge_possibility, defense;
     int on_fire, on_ice, on_lighting;
+    int starting_dmg_var;
+    float starting_defense, starting_dodge_pos;
 
   public:
     Monster(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility);
     int get_damage_var() const;
     void set_damage_var(int new_dmgvar);
-    int get_defense() const;
-    void set_defense(int new_defence);
+    float get_defense() const;
+    void set_defense(float new_defence);
     float get_dodge_possibility() const;
     void set_dodge_possibility(float new_dodgepos);
     int get_onFire();
@@ -336,6 +342,12 @@ class Monster : public Living
     void set_onFire(int );
     void set_onIce(int );
     void set_onLIghting(int );
+    int get_starting_dmg_var();
+    void set_starting_dmg_var(int );
+    float get_starting_defense();
+    void set_starting_defense(float );
+    float get_starting_dodge_pos();
+    void set_starting_dodge_pos(float );
     void displayStats();
     ~Monster();
 };
@@ -343,7 +355,7 @@ class Monster : public Living
 class Dragon : public Monster
 {
   private:
-    static const int dmg_var_boost = 20.0 / 100.0;
+    static const float dmg_var_boost = 20.0 / 100.0;
 
   public:
     Dragon(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility);
@@ -353,7 +365,7 @@ class Dragon : public Monster
 class Exoskeleton : public Monster
 {
   private:
-    static const int defense_boost = 20.0 / 100.0;
+    static const float defense_boost = 20.0 / 100.0;
 
   public:
     Exoskeleton(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility);

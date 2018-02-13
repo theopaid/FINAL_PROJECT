@@ -184,6 +184,10 @@ IceSpell::IceSpell(string _name, int _price, int _base_level, int _dmg_var, int 
     Spell::set_type(ice_spell);
 }
 
+int IceSpell::spell_poisoning() {
+    return dmg_var_reduction;
+}
+
 IceSpell::~IceSpell() {}
 
 // Class FireSpell
@@ -193,6 +197,10 @@ FireSpell::FireSpell(string _name, int _price, int _base_level, int _dmg_var, in
     Spell::set_type(fire_spell);
 }
 
+int FireSpell::spell_poisoning() {
+    return armor_reduction;
+}
+
 FireSpell::~FireSpell() {}
 
 // Class LightingSpell
@@ -200,6 +208,10 @@ LightingSpell::LightingSpell(string _name, int _price, int _base_level, int _dmg
     : Spell(_name, _price, _base_level, _dmg_var, _mana), dodge_reduction(_dodge_reduction)
 {
     Spell::set_type(lighting_spell);
+}
+
+int LightingSpell::spell_poisoning() {
+    return dodge_reduction;
 }
 
 LightingSpell::~LightingSpell() {}
@@ -326,7 +338,7 @@ void Hero::remove_inventoryItem()
                     my_equipment.armor = NULL;
                 delete inventory_items[i];
                 inventory_items.erase(inventory_items.begin() + i);
-                cout << item_name << " has been sold for " << money << "." << endl;
+                cout << item_name << " has been sold for " << money << " rubles." << endl;
                 sold = true;
                 break;
             }
@@ -452,10 +464,10 @@ void Hero::displayStats()
     cout << getName() << "'s Stats:" << endl
          << "Health Power : " << getHP() << endl
          << "Magic Power : " << magicPower << endl
-         << "Strength : " << strength << endl
-         << "Dexterity : " << dexterity << endl
-         << "Agility : " << agility << endl
-         << "Money balance : " << getMoney() << endl
+         << "Strength : " << int(strength * 100) << " %" << endl
+         << "Dexterity : " << int(dexterity * 100) << " %" << endl
+         << "Agility : " << int(agility * 100) << " %" << endl
+         << "Money balance : " << getMoney() << " rubles" << endl
          << "Level : " << getLevel() << endl
          << "Experience : " << experience << endl
          << endl
@@ -733,11 +745,11 @@ void Monster::set_damage_var(int new_dmgvar)
 {
     damage_var = new_dmgvar;
 }
-int Monster::get_defense() const
+float Monster::get_defense() const
 {
     return defense;
 }
-void Monster::set_defense(int new_defence)
+void Monster::set_defense(float new_defence)
 {
     defense = new_defence;
 }
@@ -780,14 +792,38 @@ void Monster::set_onLIghting(int _rounds)
     on_lighting = _rounds;
 }
 
+int Monster::get_starting_dmg_var() {
+    return starting_dmg_var;
+}
+
+void Monster::set_starting_dmg_var(int _value) {
+    starting_dmg_var = _value;
+}
+
+float Monster::get_starting_defense() {
+    return starting_defense;
+}
+
+void Monster::set_starting_defense(float _value) {
+    starting_defense = _value;
+}
+
+float Monster::get_starting_dodge_pos() {
+    return starting_dodge_pos;
+}
+
+void Monster::set_starting_dodge_pos(float _value) {
+    starting_dodge_pos = _value;
+}
+
 void Monster::displayStats()
 {
     cout << get_name() << "'s Stats:" << endl
          << "Health Power : " << get_HP() << endl
          << "Level : " << get_Level() << endl
-         << "Damage var : " << get_damage_var() << endl
-         << "Defense : " << get_defense() << endl
-         << "Dodge Possibility : " << get_dodge_possibility() << endl
+         << "Damage : " << get_damage_var() << " - " << get_damage_var() + 15 << endl
+         << "Defense : " << get_defense() << " %" << endl
+         << "Dodge Possibility : " << int(get_dodge_possibility() * 100) << " %" << endl
          << endl;
 }
 
@@ -797,7 +833,7 @@ Monster::~Monster() {}
 Dragon::Dragon(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
     : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
 {
-    Monster::set_damage_var(Monster::get_damage_var() * (1 + dmg_var_boost));
+    Monster::set_damage_var(Monster::get_damage_var() * (1.0 + float(dmg_var_boost)));
 }
 
 Dragon::~Dragon() {}
@@ -806,7 +842,7 @@ Dragon::~Dragon() {}
 Exoskeleton::Exoskeleton(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
     : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
 {
-    Monster::set_defense(Monster::get_defense() * (1 + defense_boost));
+    Monster::set_defense(Monster::get_defense() * (1.0 + float(defense_boost)));
 }
 
 Exoskeleton::~Exoskeleton() {}
@@ -1068,7 +1104,7 @@ void Grid::show_market()
     for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
     {
         j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << " %" << endl;
     }
     cout << endl;
     //Potions
@@ -1092,7 +1128,7 @@ void Grid::show_market()
             cout << "Agility Potions you can BUY: " << endl;
             cout << " Name || Price || Level Requirement || Agility Boost " << endl;
         }
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).boost << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << int((*it).boost * 100) << " %" << endl;
     }
     cout << endl;
     //Spells
@@ -1102,21 +1138,21 @@ void Grid::show_market()
         if ((*it).type == "ice")
         {
             cout << "Ice Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Damage Variety Reduction " << endl;
+            cout << " Name || Price || Level Requirement || Base Damage || Mana || Base Damage Reduction " << endl;
         }
         if ((*it).type == "fire")
         {
             cout << endl;
             cout << "Fire Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Armor Reduction " << endl;
+            cout << " Name || Price || Level Requirement || Base Damage || Mana || Defense Reduction " << endl;
         }
         if ((*it).type == "lighting")
         {
             cout << endl;
             cout << "Lighting Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Damage Variety || Mana || Dodge Possibility Reduction " << endl;
+            cout << " Name || Price || Level Requirement || Base Damage || Mana || Dodge Possibility Reduction " << endl;
         }
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << endl;
+        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << " %" << endl;
     }
     cout << endl;
 }
@@ -1210,7 +1246,7 @@ void Grid::createMonsters()
         switch (monster_type)
         {
         case 1:
-            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 2 * multiplier, 0.2);
+            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_fwtias")
@@ -1224,7 +1260,7 @@ void Grid::createMonsters()
             my_monsters.push_back(monster_ptr);
             break;
         case 2:
-            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 2 * multiplier, 0.2);
+            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_kokkalakias")
@@ -1238,7 +1274,7 @@ void Grid::createMonsters()
             my_monsters.push_back(monster_ptr);
             break;
         case 3:
-            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 11, 2 * multiplier, 0.2);
+            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_pneumonas")
@@ -1458,7 +1494,7 @@ void Grid::BuyFromMarket()
                         if ((*it).price > my_heroes[hero_number]->getMoney())
                         {
                             cout << endl
-                                 << "Sorry you don't have enough money for this purchase." << endl;
+                                 << "Sorry you don't have enough rubles for this purchase." << endl;
                             break;
                         }
                         if ((*it).base_level > my_heroes[hero_number]->getLevel())
@@ -1496,7 +1532,7 @@ void Grid::BuyFromMarket()
                         if ((*it).price > my_heroes[hero_number]->getMoney())
                         {
                             cout << endl
-                                 << "Sorry you don't have enough money for this purchase." << endl;
+                                 << "Sorry you don't have enough rubles for this purchase." << endl;
                             break;
                         }
                         if ((*it).base_level > my_heroes[hero_number]->getLevel())
@@ -1797,16 +1833,16 @@ void Grid::castSpell(Hero *hero_ptr)
     int mana_spent = selected_spell->get_mana();
     hero_ptr->setMP(hero_ptr->getMP() - mana_spent);
     int damage = 0;
-    int onLighting_reduction = 1;
-    if(my_monsters[monster_number]->get_onLighting() > 0)
-        onLighting_reduction = 2;
-    if (!((rand() % 100 + 1) <= (my_monsters[monster_number]->get_dodge_possibility() * 100.0) / onLighting_reduction ))
+    //int onLighting_reduction = 1;
+    //if(my_monsters[monster_number]->get_onLighting() > 0)
+     //   onLighting_reduction = 2;
+    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0 ))
     {
         damage = (selected_spell->get_dmg_var() + (rand() % 16)) * (1 + hero_ptr->get_dexterity());
-        if (my_monsters[monster_number]->get_onFire() > 0)
-            damage = damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.025;
-        else
-            damage = damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.05;
+        //if (my_monsters[monster_number]->get_onFire() > 0)
+        //    damage = damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.025;
+        //else
+        damage = damage - damage * float(my_monsters[monster_number]->get_defense()) / 100.0;
         my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage);
         cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage << " hit points" << endl;
         if (my_monsters[monster_number]->get_HP() < 0)
@@ -1817,14 +1853,17 @@ void Grid::castSpell(Hero *hero_ptr)
         case 5:
             cout << "===> " << hero_ptr->getName() << " reduced the damage width of " << my_monsters[monster_number]->get_name() << " for 3 rounds" << endl;
             my_monsters[monster_number]->set_onIce(3); // Affected for 3 rounds
+            my_monsters[monster_number]->set_damage_var(my_monsters[monster_number]->get_damage_var() - my_monsters[monster_number]->get_damage_var() * float(selected_spell->spell_poisoning()) / 100.0);
             break;
         case 6:
             cout << "===> " << hero_ptr->getName() << " reduced the defense of " << my_monsters[monster_number]->get_name() << " for 3 rounds" << endl;
             my_monsters[monster_number]->set_onFire(3);
+            my_monsters[monster_number]->set_defense(my_monsters[monster_number]->get_defense() - my_monsters[monster_number]->get_defense() * float(selected_spell->spell_poisoning()) / 100.0);
             break;
         case 7:
             cout << "===> " << hero_ptr->getName() << " reduced the dodge possibility of " << my_monsters[monster_number]->get_name() << " for 3 rounds" << endl;
             my_monsters[monster_number]->set_onLIghting(3);
+            my_monsters[monster_number]->set_dodge_possibility(my_monsters[monster_number]->get_dodge_possibility() - my_monsters[monster_number]->get_dodge_possibility() * float(selected_spell->spell_poisoning()) / 100.0);
             break;
         }
         if (my_monsters[monster_number]->get_HP() == 0)
@@ -1866,9 +1905,9 @@ void Grid::Attack(Hero *hero_ptr)
     }
     int damage;
     int onLighting_reduction = 1;
-    if(my_monsters[monster_number]->get_onLighting() > 0)
-        onLighting_reduction = 2;
-    if (!((rand() % 100 + 1) <= (my_monsters[monster_number]->get_dodge_possibility() * 100.0) / onLighting_reduction ))
+    //if(my_monsters[monster_number]->get_onLighting() > 0)
+     //   onLighting_reduction = 2;
+    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0 ))
     {
         if (hero_ptr->getEquipment().hand1 != NULL && hero_ptr->getEquipment().hand2 != NULL)
             damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand1->get_dmg() + hero_ptr->getEquipment().hand2->get_dmg());
@@ -1878,11 +1917,11 @@ void Grid::Attack(Hero *hero_ptr)
             damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand2->get_dmg());
         else if (hero_ptr->getEquipment().hand1 == NULL && hero_ptr->getEquipment().hand2 == NULL) // If Hero fights with his fists
             damage = (1 + hero_ptr->get_strength()) * 10;
-        if (my_monsters[monster_number]->get_onFire() < 0)
-            my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.025);
-        else
-            my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.05);
-        cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.05 << " hit points" << endl;
+        //if (my_monsters[monster_number]->get_onFire() < 0)
+        //    my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.025);
+        //else
+        my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) / 100.0);
+        cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage - damage * float(my_monsters[monster_number]->get_defense()) / 100.0 << " hit points" << endl;
         if (my_monsters[monster_number]->get_HP() < 0)
             my_monsters[monster_number]->set_HP(0);
         if (my_monsters[monster_number]->get_HP() == 0)
@@ -1899,6 +1938,11 @@ void Grid::Fight()
     bool flag_monsters_win = false;
     int monsters_with_hp_0_counter;
     int heroes_with_hp_0_counter;
+    for(int z=0; z<my_monsters.size(); z++) {
+        my_monsters[z]->set_starting_dmg_var(my_monsters[z]->get_damage_var());
+        my_monsters[z]->set_starting_defense(my_monsters[z]->get_defense());
+        my_monsters[z]->set_starting_dodge_pos(my_monsters[z]->get_dodge_possibility());
+    }
 
     while (!(flag_heroes_win || flag_monsters_win))
     {
@@ -1928,8 +1972,8 @@ void Grid::Fight()
                 if (my_monsters[i]->get_HP() > 0)
                 {
                     int monster_dmg = my_monsters[i]->get_damage_var() + (rand() % 16);
-                    if (my_monsters[i]->get_onIce() > 0)
-                        monster_dmg = monster_dmg - 5; // If affected from Ice Spell
+                    //if (my_monsters[i]->get_onIce() > 0)
+                    //    monster_dmg = monster_dmg - 5; // If affected from Ice Spell
                     int which_hero_to_attack;
                     while (true)
                     { // So the monster can't pick a hero with 0 hp to attack
@@ -1970,10 +2014,16 @@ void Grid::Fight()
             {
                 if (my_monsters[h]->get_onIce() > 0)
                     my_monsters[h]->set_onIce(my_monsters[h]->get_onIce() - 1); // When a round ends, the duration of the poisoning of the spells gets reduced
+                else
+                    my_monsters[h]->set_damage_var(my_monsters[h]->get_starting_dmg_var());
                 if (my_monsters[h]->get_onFire() > 0)
                     my_monsters[h]->set_onFire(my_monsters[h]->get_onFire() - 1);
+                else
+                    my_monsters[h]->set_defense(my_monsters[h]->get_starting_defense());
                 if (my_monsters[h]->get_onLighting() > 0)
                     my_monsters[h]->set_onLIghting(my_monsters[h]->get_onLighting() - 1);
+                else
+                    my_monsters[h]->set_dodge_possibility(my_monsters[h]->get_starting_dodge_pos());
             }
             cout << "Monsters's turn completed" << endl;
             cout << "Heroes and Monsters are getting healed.." << endl;
