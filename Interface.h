@@ -180,6 +180,9 @@ class Spell
     Spell(string _name, int _price, int _base_level, int _dmg_var, int _mana);
     TypeOfItem get_type() const;
     void set_type(TypeOfItem);
+    string getName();
+    int get_dmg_var();
+    int get_mana();
     ~Spell();
 };
 
@@ -252,9 +255,10 @@ class Hero : public Living
     void add_boost_to_dexterity(float boost);
     void add_boost_to_agility(float boost);
     bool add_inventoryItem(Item *);
-    void add_inventorySpell(Spell *);
+    bool add_inventorySpell(Spell *);
     void remove_inventoryItem();
     void show_inventory();
+    void show_spells();
     int getMoney() const;
     void setMoney(int);
     int getLevel() const;
@@ -267,6 +271,7 @@ class Hero : public Living
     void setEXP(int );
     Equipment getEquipment();
     vector<Item *> getInventory();
+    vector<Spell *> getOwnedSpells();
     void displayStats();
     void Equip();
     void displayEquipment();
@@ -315,6 +320,7 @@ class Monster : public Living
   private:
     int damage_var, defense;
     float dodge_possibility;
+    int on_fire, on_ice, on_lighting;
 
   public:
     Monster(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility);
@@ -324,6 +330,12 @@ class Monster : public Living
     void set_defense(int new_defence);
     float get_dodge_possibility() const;
     void set_dodge_possibility(float new_dodgepos);
+    int get_onFire();
+    int get_onIce();
+    int get_onLighting();
+    void set_onFire(int );
+    void set_onIce(int );
+    void set_onLIghting(int );
     void displayStats();
     ~Monster();
 };
@@ -391,5 +403,6 @@ class Grid
     void FightMenu(Hero* );
     void Fight();
     void Attack(Hero* );
+    void castSpell(Hero* );
     ~Grid();
 };

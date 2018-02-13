@@ -160,6 +160,21 @@ void Spell::set_type(TypeOfItem _type)
     item_type = _type;
 }
 
+string Spell::getName()
+{
+    return name;
+}
+
+int Spell::get_dmg_var()
+{
+    return dmg_var;
+}
+
+int Spell::get_mana()
+{
+    return mana;
+}
+
 Spell::~Spell() {}
 
 // Class IceSpell
@@ -266,9 +281,19 @@ bool Hero::add_inventoryItem(Item *my_item)
     inventory_items.push_back(my_item);
     return true;
 }
-void Hero::add_inventorySpell(Spell *my_spell)
+bool Hero::add_inventorySpell(Spell *my_spell)
 {
+    for (int i = 0; i < inventory_spells.size(); i++)
+    {
+        if (inventory_spells[i]->getName() == my_spell->getName())
+        {
+            delete my_spell;
+            cout << "You already own this Spell!" << endl;
+            return false;
+        }
+    }
     inventory_spells.push_back(my_spell);
+    return true;
 }
 void Hero::remove_inventoryItem()
 {
@@ -339,6 +364,31 @@ void Hero::show_inventory()
         cout << inventory_items[i]->getName() << "   |    " << type << endl;
     }
 }
+
+void Hero::show_spells()
+{
+    string type;
+    cout << endl
+         << "Here are " << getName() << "'s owned Spells:" << endl;
+    cout << "    NAME    |    TYPE     " << endl;
+    for (int i = 0; i < inventory_spells.size(); i++)
+    {
+        switch (inventory_spells[i]->get_type())
+        {
+        case 5:
+            type = "Ice Spell";
+            break;
+        case 6:
+            type = "Fire Spell";
+            break;
+        case 7:
+            type = "Lighting Spell";
+            break;
+        }
+        cout << inventory_spells[i]->getName() << "   |    " << type << endl;
+    }
+}
+
 int Hero::getMoney() const
 {
     return money;
@@ -390,6 +440,11 @@ void Hero::setEXP(int _xp)
 vector<Item *> Hero::getInventory()
 {
     return inventory_items;
+}
+
+vector<Spell *> Hero::getOwnedSpells()
+{
+    return inventory_spells;
 }
 
 void Hero::displayStats()
@@ -663,7 +718,13 @@ Paladin::~Paladin() {}
 
 //Class Monster
 Monster::Monster(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
-    : Living(_name, _level, _healthPower), damage_var(_damage_var), defense(_defense), dodge_possibility(_dodge_possibility) {}
+    : Living(_name, _level, _healthPower), damage_var(_damage_var), defense(_defense), dodge_possibility(_dodge_possibility)
+{
+    on_fire = 0;
+    on_ice = 0;
+    on_lighting = 0;
+}
+
 int Monster::get_damage_var() const
 {
     return damage_var;
@@ -687,6 +748,36 @@ float Monster::get_dodge_possibility() const
 void Monster::set_dodge_possibility(float new_dodgepos)
 {
     dodge_possibility = new_dodgepos;
+}
+
+int Monster::get_onFire()
+{
+    return on_fire;
+}
+
+int Monster::get_onIce()
+{
+    return on_ice;
+}
+
+int Monster::get_onLighting()
+{
+    return on_lighting;
+}
+
+void Monster::set_onFire(int _rounds)
+{
+    on_fire = _rounds;
+}
+
+void Monster::set_onIce(int _rounds)
+{
+    on_ice = _rounds;
+}
+
+void Monster::set_onLIghting(int _rounds)
+{
+    on_lighting = _rounds;
 }
 
 void Monster::displayStats()
@@ -1119,7 +1210,7 @@ void Grid::createMonsters()
         switch (monster_type)
         {
         case 1:
-            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70 * multiplier, 25, 2 * multiplier, 0.2);
+            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 2 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_fwtias")
@@ -1133,7 +1224,7 @@ void Grid::createMonsters()
             my_monsters.push_back(monster_ptr);
             break;
         case 2:
-            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 25, 2 * multiplier, 0.2);
+            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 2 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_kokkalakias")
@@ -1147,7 +1238,7 @@ void Grid::createMonsters()
             my_monsters.push_back(monster_ptr);
             break;
         case 3:
-            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 25, 2 * multiplier, 0.2);
+            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 11, 2 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_pneumonas")
@@ -1185,6 +1276,7 @@ void Grid::Menu()
              << "9 - Display Equipment" << endl
              << "10 - Quit the Game" << endl
              << "11 - Use a Potion" << endl
+             << "12 - Display owned Spells" << endl
              << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
@@ -1224,6 +1316,10 @@ void Grid::Menu()
             exit(0);
         case 11:
             HeroToUsePotion();
+            break;
+        case 12:
+            for (int i = 0; i < my_heroes.size(); i++)
+                my_heroes[i]->show_spells();
             break;
         default:
             cout << "Your input was wrong. Please TRY AGAIN." << endl;
@@ -1490,10 +1586,14 @@ void Grid::BuyFromMarket()
                             spell_ptr = new FireSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
                         else
                             spell_ptr = new LightingSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
-                        my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
-                        my_heroes[hero_number]->add_inventorySpell(spell_ptr);
-                        cout << endl
-                             << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s inventory." << endl;
+                        //my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                        bool added = my_heroes[hero_number]->add_inventorySpell(spell_ptr);
+                        if (added)
+                        {
+                            my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
+                            cout << endl
+                                 << (*it).name << " has been added to " << my_heroes[hero_number]->get_name() << "'s Spells List." << endl;
+                        }
                         break;
                     }
                     i++;
@@ -1573,7 +1673,7 @@ void Grid::FightMenu(Hero *hero_ptr)
              << "6 - Use a Potion" << endl
              << "7 - Equip an item" << endl
              << "8 - Display Equipment" << endl
-             << "9 - Display Spell in your Inventory" << endl
+             << "9 - Display owned Spells" << endl
              << "10 - Quit the Game" << endl
              << "Type your choice and press return : ";
         cin >> input;
@@ -1594,24 +1694,38 @@ void Grid::FightMenu(Hero *hero_ptr)
             Attack(hero_ptr);
             break;
         case 5:
-
+            if(hero_ptr->getOwnedSpells().size() > 0)
+                castSpell(hero_ptr);
+            else {
+                cout << "You do not own any Spells!" << endl;
+                continue;
+            }
             break;
         case 6:
-            for (int i = 0; hero_ptr->getInventory().size(); i++)
+        {
+            bool potion_flag = false;
+            for (int i = 0; i<hero_ptr->getInventory().size(); i++)
             {
                 if (hero_ptr->getInventory()[i]->get_type() != weapon && hero_ptr->getInventory()[i]->get_type() != armor)
                 {
-                    cout << "You have no potion in your inventory!" << endl;
-                    continue;
+                    hero_ptr->usePotion();
+                    potion_flag = true;
+                    break;
                 }
             }
-            hero_ptr->usePotion();
-            break;
+            if(!potion_flag) {
+                cout << "You have no potion in your inventory!" << endl;
+                continue;
+            }
+        }
         case 7:
             hero_ptr->Equip();
             break;
         case 8:
             hero_ptr->displayEquipment();
+            continue;
+        case 9:
+            hero_ptr->show_spells();
             continue;
         case 10:
             cout << "It was fun while it lasted. GGWP :D" << endl;
@@ -1624,6 +1738,100 @@ void Grid::FightMenu(Hero *hero_ptr)
         cin.ignore(INT_MAX, '\n');
         break;
     }
+}
+
+void Grid::castSpell(Hero *hero_ptr)
+{
+
+    int monster_number = 0;
+    if (my_monsters.size() > 1)
+    {
+        string monster_input;
+        bool flag = false;
+        cout << "Here are the monsters you can attack:" << endl;
+        for (int k = 0; k < my_monsters.size(); k++)
+            cout << my_monsters[k]->get_name() << endl;
+        while (!flag)
+        {
+            monster_number = 0;
+            cout << "Type the name of the Monster you want to Attack:";
+            cin >> monster_input;
+            cout << endl;
+            for (int i = 0; i < my_monsters.size(); i++)
+            {
+                if (monster_input == my_monsters[i]->get_name() && my_monsters[i]->get_HP() > 0)
+                {
+                    flag = true;
+                    break;
+                }
+                monster_number++;
+            }
+            if (flag == false)
+                cout << endl
+                     << "There is no Monster alive named this way, please TRY AGAIN" << endl;
+        }
+    }
+    hero_ptr->show_spells();
+    Spell *selected_spell;
+    string spell_input;
+    bool spell_found = false;
+    while (!spell_found)
+    {
+        cout << "Type the name of the Spell you want to cast: ";
+        cin >> spell_input;
+        cout << endl;
+        for (int i = 0; i < hero_ptr->getOwnedSpells().size(); i++)
+        {
+            if (spell_input == hero_ptr->getOwnedSpells()[i]->getName())
+            {
+                spell_found = true;
+                selected_spell = hero_ptr->getOwnedSpells()[i];
+                break;
+            }
+        }
+        if (!spell_found)
+        {
+            cout << "There is no listed Spell named this way. Please TRY AGAIN." << endl;
+        }
+    }
+    int mana_spent = selected_spell->get_mana();
+    hero_ptr->setMP(hero_ptr->getMP() - mana_spent);
+    int damage = 0;
+    int onLighting_reduction = 1;
+    if(my_monsters[monster_number]->get_onLighting() > 0)
+        onLighting_reduction = 2;
+    if (!((rand() % 100 + 1) <= (my_monsters[monster_number]->get_dodge_possibility() * 100.0) / onLighting_reduction ))
+    {
+        damage = (selected_spell->get_dmg_var() + (rand() % 16)) * (1 + hero_ptr->get_dexterity());
+        if (my_monsters[monster_number]->get_onFire() > 0)
+            damage = damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.025;
+        else
+            damage = damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.05;
+        my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage);
+        cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage << " hit points" << endl;
+        if (my_monsters[monster_number]->get_HP() < 0)
+            my_monsters[monster_number]->set_HP(0);
+
+        switch (selected_spell->get_type())
+        {
+        case 5:
+            cout << "===> " << hero_ptr->getName() << " reduced the damage width of " << my_monsters[monster_number]->get_name() << " for 3 rounds" << endl;
+            my_monsters[monster_number]->set_onIce(3); // Affected for 3 rounds
+            break;
+        case 6:
+            cout << "===> " << hero_ptr->getName() << " reduced the defense of " << my_monsters[monster_number]->get_name() << " for 3 rounds" << endl;
+            my_monsters[monster_number]->set_onFire(3);
+            break;
+        case 7:
+            cout << "===> " << hero_ptr->getName() << " reduced the dodge possibility of " << my_monsters[monster_number]->get_name() << " for 3 rounds" << endl;
+            my_monsters[monster_number]->set_onLIghting(3);
+            break;
+        }
+        if (my_monsters[monster_number]->get_HP() == 0)
+            cout << "===> " << my_monsters[monster_number]->get_name() << " is dead" << endl;
+    }
+    else
+        cout << "====> " << hero_ptr->get_name() << "'s attack was dodged by " << my_monsters[monster_number]->get_name() << endl;
 }
 
 void Grid::Attack(Hero *hero_ptr)
@@ -1657,15 +1865,23 @@ void Grid::Attack(Hero *hero_ptr)
         }
     }
     int damage;
-    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0))
+    int onLighting_reduction = 1;
+    if(my_monsters[monster_number]->get_onLighting() > 0)
+        onLighting_reduction = 2;
+    if (!((rand() % 100 + 1) <= (my_monsters[monster_number]->get_dodge_possibility() * 100.0) / onLighting_reduction ))
     {
         if (hero_ptr->getEquipment().hand1 != NULL && hero_ptr->getEquipment().hand2 != NULL)
-            damage = hero_ptr->get_strength() * (hero_ptr->getEquipment().hand1->get_dmg() + hero_ptr->getEquipment().hand2->get_dmg());
+            damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand1->get_dmg() + hero_ptr->getEquipment().hand2->get_dmg());
         else if (hero_ptr->getEquipment().hand1 != NULL && hero_ptr->getEquipment().hand2 == NULL)
-            damage = hero_ptr->get_strength() * (hero_ptr->getEquipment().hand1->get_dmg());
+            damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand1->get_dmg());
         else if (hero_ptr->getEquipment().hand1 == NULL && hero_ptr->getEquipment().hand2 != NULL)
-            damage = hero_ptr->get_strength() * (hero_ptr->getEquipment().hand2->get_dmg());
-        my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.05);
+            damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand2->get_dmg());
+        else if (hero_ptr->getEquipment().hand1 == NULL && hero_ptr->getEquipment().hand2 == NULL) // If Hero fights with his fists
+            damage = (1 + hero_ptr->get_strength()) * 10;
+        if (my_monsters[monster_number]->get_onFire() < 0)
+            my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.025);
+        else
+            my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.05);
         cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.05 << " hit points" << endl;
         if (my_monsters[monster_number]->get_HP() < 0)
             my_monsters[monster_number]->set_HP(0);
@@ -1688,18 +1904,20 @@ void Grid::Fight()
     {
         for (int i = 0; i < my_heroes.size(); i++)
         {
-
-            FightMenu(my_heroes[i]);
-            monsters_with_hp_0_counter = 0;
-            for (int j = 0; j < my_monsters.size(); j++)
+            if (my_heroes[i]->get_HP() > 0)
             {
-                if (my_monsters[j]->get_HP() == 0)
-                    monsters_with_hp_0_counter++;
-            }
-            if (monsters_with_hp_0_counter == my_monsters.size())
-            {
-                flag_heroes_win = true;
-                break;
+                FightMenu(my_heroes[i]);
+                monsters_with_hp_0_counter = 0;
+                for (int j = 0; j < my_monsters.size(); j++)
+                {
+                    if (my_monsters[j]->get_HP() == 0)
+                        monsters_with_hp_0_counter++;
+                }
+                if (monsters_with_hp_0_counter == my_monsters.size())
+                {
+                    flag_heroes_win = true;
+                    break;
+                }
             }
         }
         if (!flag_heroes_win)
@@ -1710,6 +1928,8 @@ void Grid::Fight()
                 if (my_monsters[i]->get_HP() > 0)
                 {
                     int monster_dmg = my_monsters[i]->get_damage_var() + (rand() % 16);
+                    if (my_monsters[i]->get_onIce() > 0)
+                        monster_dmg = monster_dmg - 5; // If affected from Ice Spell
                     int which_hero_to_attack;
                     while (true)
                     { // So the monster can't pick a hero with 0 hp to attack
@@ -1746,6 +1966,15 @@ void Grid::Fight()
         }
         if (!(flag_heroes_win || flag_monsters_win))
         {
+            for (int h = 0; h < my_monsters.size(); h++)
+            {
+                if (my_monsters[h]->get_onIce() > 0)
+                    my_monsters[h]->set_onIce(my_monsters[h]->get_onIce() - 1); // When a round ends, the duration of the poisoning of the spells gets reduced
+                if (my_monsters[h]->get_onFire() > 0)
+                    my_monsters[h]->set_onFire(my_monsters[h]->get_onFire() - 1);
+                if (my_monsters[h]->get_onLighting() > 0)
+                    my_monsters[h]->set_onLIghting(my_monsters[h]->get_onLighting() - 1);
+            }
             cout << "Monsters's turn completed" << endl;
             cout << "Heroes and Monsters are getting healed.." << endl;
             for (int j = 0; j < my_heroes.size(); j++)
@@ -1753,13 +1982,13 @@ void Grid::Fight()
                 if (my_heroes[j]->getHP() != 0)
                 {
                     if (my_heroes[j]->get_HP() < 70)
-                        cout << "====> " << my_heroes[j]->get_name() << " restored " << my_heroes[j]->getHP() * (0.20) << " health power" << endl;
-                    my_heroes[j]->setHP(my_heroes[j]->getHP() * (1.20));
+                        cout << "====> " << my_heroes[j]->get_name() << " restored " << 70 * (0.15) << " health power" << endl;
+                    my_heroes[j]->setHP(my_heroes[j]->getHP() + 70 * 0.15);
                     if (my_heroes[j]->getHP() > 70)
                         my_heroes[j]->setHP(70);
                     if (my_heroes[j]->getMP() < 70)
-                        cout << "====> " << my_heroes[j]->get_name() << " restored " << my_heroes[j]->getMP() * (0.20) << " mana" << endl;
-                    my_heroes[j]->setMP(my_heroes[j]->getMP() * (1.20));
+                        cout << "====> " << my_heroes[j]->get_name() << " restored " << 70 * (0.15) << " mana" << endl;
+                    my_heroes[j]->setMP(my_heroes[j]->getMP() + 70 * 0.15);
                     if (my_heroes[j]->getMP() > 70)
                         my_heroes[j]->setMP(70);
                 }
@@ -1770,8 +1999,8 @@ void Grid::Fight()
                 if (my_monsters[j]->get_HP() != 0)
                 {
                     if (my_heroes[j]->get_HP() < 70 * multiplier)
-                        cout << "====> " << my_monsters[j]->get_name() << " restored " << my_monsters[j]->get_HP() * (0.20) << " health power" << endl;
-                    my_monsters[j]->set_HP(my_monsters[j]->get_HP() * (1.20));
+                        cout << "====> " << my_monsters[j]->get_name() << " restored " << 70 * multiplier * (0.10) << " health power" << endl;
+                    my_monsters[j]->set_HP(my_monsters[j]->get_HP() + 70 * multiplier * (0.10));
                     if (my_monsters[j]->get_HP() > 70 * multiplier)
                         my_monsters[j]->set_HP(70 * multiplier);
                 }
