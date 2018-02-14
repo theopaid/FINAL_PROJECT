@@ -459,7 +459,7 @@ void Grid::createHero()
 void Grid::createMonsters()
 {
     int monsters_to_create = rand() % my_heroes.size() + 1;
-    int multiplier = 1 + 0.2 * (my_heroes[0]->getLevel() - 1);
+    float multiplier = 1.0 + 0.2 * float(my_heroes[0]->getLevel() - 1);
     Monster *monster_ptr;
     bool deleted;
     for (int i = 0; i < monsters_to_create; i++)
@@ -469,7 +469,7 @@ void Grid::createMonsters()
         switch (monster_type)
         {
         case 1:
-            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
+            monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70.0 * multiplier, 11, 10.0 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_fwtias")
@@ -486,7 +486,7 @@ void Grid::createMonsters()
             }
             break;
         case 2:
-            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
+            monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70.0 * multiplier, 11, 10.0 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_kokkalakias")
@@ -503,7 +503,7 @@ void Grid::createMonsters()
             }
             break;
         case 3:
-            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
+            monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70.0 * multiplier, 11, 10.0 * multiplier, 0.2);
             for (int k = 0; k < my_monsters.size(); k++)
             {
                 if (my_monsters[k]->get_name() == "kurios_pneumonas")
