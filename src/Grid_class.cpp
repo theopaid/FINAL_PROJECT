@@ -999,6 +999,8 @@ void Grid::FightMenu(Hero *hero_ptr)
             exit(0);
         default:
             cout << "Your input was wrong. Please TRY AGAIN." << endl;
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
             continue;
         }
         cin.clear();
