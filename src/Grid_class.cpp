@@ -10,852 +10,6 @@
 
 using namespace std;
 
-// Class Item
-Item::Item(string _name, int _price, int _base_level)
-    : name(_name), price(_price), base_level(_base_level) {}
-
-TypeOfItem Item::get_type() const
-{
-    return item_type;
-}
-
-void Item::set_type(TypeOfItem _type)
-{
-    item_type = _type;
-}
-
-string Item::getName()
-{
-    return name;
-}
-
-int Item::getPrice()
-{
-    return price;
-}
-
-int Item::get_dmg_red()
-{
-}
-
-int Item::get_dmg()
-{
-}
-
-Item::~Item() {}
-
-// Class Weapon
-Weapon::Weapon(string _name, int _price, int _base_level, int _damage, int _hands)
-    : Item(_name, _price, _base_level), damage(_damage), hands(_hands)
-{
-    Item::set_type(weapon);
-}
-
-int Weapon::getHands()
-{
-    return hands;
-}
-
-float Weapon::get_boost() {}
-
-int Weapon::get_dmg()
-{
-    return damage;
-}
-
-Weapon::~Weapon() {}
-
-// Class Armor
-Armor::Armor(string _name, int _price, int _base_level, int _dmg_reduction)
-    : Item(_name, _price, _base_level), dmg_reduction(_dmg_reduction)
-{
-    Item::set_type(armor);
-}
-
-int Armor::getHands() {}
-
-float Armor::get_boost() {}
-
-int Armor::get_dmg_red()
-{
-    return dmg_reduction;
-}
-
-Armor::~Armor() {}
-
-// Class StrengthPotion
-StrengthPotion::StrengthPotion(string _name, int _price, int _base_level, float _boost)
-    : Item(_name, _price, _base_level), boost(_boost)
-{
-    Item::set_type(strength_potion);
-}
-
-float StrengthPotion::get_boost()
-{
-    return boost;
-}
-
-/*void StrengthPotion::use_the_potion(Hero& my_hero)
-{
-    my_hero.add_boost_to_strength(boost);
-}*/
-
-int StrengthPotion::getHands() {}
-
-StrengthPotion::~StrengthPotion() {}
-
-// Class DexterityPotion
-DexterityPotion::DexterityPotion(string _name, int _price, int _base_level, float _boost)
-    : Item(_name, _price, _base_level), boost(_boost)
-{
-    Item::set_type(dexterity_potion);
-}
-
-float DexterityPotion::get_boost()
-{
-    return boost;
-}
-
-/*void DexterityPotion::use_the_potion(Hero& my_hero)
-{
-    my_hero.add_boost_to_strength(boost);
-}*/
-
-int DexterityPotion::getHands() {}
-
-DexterityPotion::~DexterityPotion() {}
-
-// Class Agility Potion
-AgilityPotion::AgilityPotion(string _name, int _price, int _base_level, float _boost)
-    : Item(_name, _price, _base_level), boost(_boost)
-{
-    Item::set_type(agility_potion);
-}
-
-float AgilityPotion::get_boost()
-{
-    return boost;
-}
-
-/*void AgilityPotion::use_the_potion(Hero& my_hero)
-{
-    my_hero.add_boost_to_strength(boost);
-}*/
-
-int AgilityPotion::getHands() {}
-
-AgilityPotion::~AgilityPotion() {}
-
-// Class Spell
-Spell::Spell(string _name, int _price, int _base_level, int _dmg_var, int _mana)
-    : name(_name), price(_price), base_level(_base_level), dmg_var(_dmg_var), mana(_mana) {}
-
-TypeOfItem Spell::get_type() const
-{
-    return item_type;
-}
-
-void Spell::set_type(TypeOfItem _type)
-{
-    item_type = _type;
-}
-
-string Spell::getName()
-{
-    return name;
-}
-
-int Spell::get_dmg_var()
-{
-    return dmg_var;
-}
-
-int Spell::get_mana()
-{
-    return mana;
-}
-
-Spell::~Spell() {}
-
-// Class IceSpell
-IceSpell::IceSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _dmg_var_reduction)
-    : Spell(_name, _price, _base_level, _dmg_var, _mana), dmg_var_reduction(_dmg_var_reduction)
-{
-    Spell::set_type(ice_spell);
-}
-
-int IceSpell::spell_poisoning() {
-    return dmg_var_reduction;
-}
-
-IceSpell::~IceSpell() {}
-
-// Class FireSpell
-FireSpell::FireSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _armor_reduction)
-    : Spell(_name, _price, _base_level, _dmg_var, _mana), armor_reduction(_armor_reduction)
-{
-    Spell::set_type(fire_spell);
-}
-
-int FireSpell::spell_poisoning() {
-    return armor_reduction;
-}
-
-FireSpell::~FireSpell() {}
-
-// Class LightingSpell
-LightingSpell::LightingSpell(string _name, int _price, int _base_level, int _dmg_var, int _mana, int _dodge_reduction)
-    : Spell(_name, _price, _base_level, _dmg_var, _mana), dodge_reduction(_dodge_reduction)
-{
-    Spell::set_type(lighting_spell);
-}
-
-int LightingSpell::spell_poisoning() {
-    return dodge_reduction;
-}
-
-LightingSpell::~LightingSpell() {}
-
-//Class Living
-Living::Living(string _name, int _level, int _healthPower)
-    : name(_name), level(_level), healthPower(_healthPower) {}
-
-string Living::get_name() const
-{
-    return name;
-}
-int Living::get_Level() const
-{
-    return level;
-}
-
-void Living::set_level(int _lvl)
-{
-    level = _lvl;
-}
-
-int Living::get_HP()
-{
-    return healthPower;
-}
-
-void Living::set_HP(int _hp)
-{
-    healthPower = _hp;
-}
-
-Living::~Living() {}
-
-//Class Hero
-Hero::Hero(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
-    : Living(_name, _level, _healthPower), magicPower(_magicPower), strength(_strength), dexterity(_dexterity), agility(_agility), money(_money), experience(_experience)
-{
-    my_equipment.hand1 = NULL;
-    my_equipment.hand2 = NULL;
-    my_equipment.armor = NULL;
-}
-
-float Hero::get_strength() const
-{
-    return strength;
-}
-void Hero::set_strength(float new_strength)
-{
-    strength = new_strength;
-}
-float Hero::get_agility() const
-{
-    return agility;
-}
-void Hero::set_agility(float new_agility)
-{
-    agility = new_agility;
-}
-float Hero::get_dexterity() const
-{
-    return dexterity;
-}
-void Hero::set_dexterity(float new_dexterity)
-{
-    dexterity = new_dexterity;
-}
-bool Hero::add_inventoryItem(Item *my_item)
-{
-    for (int i = 0; i < inventory_items.size(); i++)
-    {
-        if (inventory_items[i]->getName() == my_item->getName())
-        {
-            delete my_item;
-            cout << "This item is already in your inventory!" << endl;
-            return false;
-        }
-    }
-    inventory_items.push_back(my_item);
-    return true;
-}
-bool Hero::add_inventorySpell(Spell *my_spell)
-{
-    for (int i = 0; i < inventory_spells.size(); i++)
-    {
-        if (inventory_spells[i]->getName() == my_spell->getName())
-        {
-            delete my_spell;
-            cout << "You already own this Spell!" << endl;
-            return false;
-        }
-    }
-    inventory_spells.push_back(my_spell);
-    return true;
-}
-void Hero::remove_inventoryItem()
-{
-    if (inventory_items.size() == 0)
-    {
-        cout << "There are no items in " << getName() << "'s inventory!" << endl;
-        return;
-    }
-    show_inventory();
-    string item_name;
-    bool sold = false;
-    int money;
-    while (!sold)
-    {
-        cout << endl
-             << "Type the name of the item you want to sell:";
-        cin >> item_name;
-        cout << endl;
-        for (int i = 0; i < inventory_items.size(); i++)
-        {
-            if (item_name == inventory_items[i]->getName())
-            {
-                money = inventory_items[i]->getPrice() / 2;
-                setMoney(getMoney() + inventory_items[i]->getPrice() / 2);
-                if (inventory_items[i] == my_equipment.hand1)
-                    my_equipment.hand1 = NULL;
-                if (inventory_items[i] == my_equipment.hand2)
-                    my_equipment.hand2 = NULL;
-                if (inventory_items[i] == my_equipment.armor)
-                    my_equipment.armor = NULL;
-                delete inventory_items[i];
-                inventory_items.erase(inventory_items.begin() + i);
-                cout << item_name << " has been sold for " << money << " rubles." << endl;
-                sold = true;
-                break;
-            }
-        }
-        if (!sold)
-            cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
-    }
-}
-void Hero::show_inventory()
-{
-    string type;
-    cout << endl
-         << "Here are " << getName() << "'s inventory items:" << endl;
-    cout << "    NAME    |    TYPE     " << endl;
-    for (int i = 0; i < inventory_items.size(); i++)
-    {
-        switch (inventory_items[i]->get_type())
-        {
-        case 0:
-            type = "Weapon";
-            break;
-        case 1:
-            type = "Armor";
-            break;
-        case 2:
-            type = "Strength Potion";
-            break;
-        case 3:
-            type = "Dexterity Potion";
-            break;
-        case 4:
-            type = "Agility Potion";
-            break;
-        }
-        cout << inventory_items[i]->getName() << "   |    " << type << endl;
-    }
-}
-
-void Hero::show_spells()
-{
-    string type;
-    cout << endl
-         << "Here are " << getName() << "'s owned Spells:" << endl;
-    cout << "    NAME    |    TYPE     " << endl;
-    for (int i = 0; i < inventory_spells.size(); i++)
-    {
-        switch (inventory_spells[i]->get_type())
-        {
-        case 5:
-            type = "Ice Spell";
-            break;
-        case 6:
-            type = "Fire Spell";
-            break;
-        case 7:
-            type = "Lighting Spell";
-            break;
-        }
-        cout << inventory_spells[i]->getName() << "   |    " << type << endl;
-    }
-}
-
-int Hero::getMoney() const
-{
-    return money;
-}
-void Hero::setMoney(int _money)
-{
-    money = _money;
-}
-int Hero::getLevel() const
-{
-    return Living::get_Level();
-}
-
-string Hero::getName() const
-{
-    return Living::get_name();
-}
-
-int Hero::getHP()
-{
-    return Living::get_HP();
-}
-
-void Hero::setHP(int _hp)
-{
-    Living::set_HP(_hp);
-}
-
-int Hero::getMP()
-{
-    return magicPower;
-}
-
-void Hero::setMP(int _mp)
-{
-    magicPower = _mp;
-}
-
-int Hero::getEXP()
-{
-    return experience;
-}
-
-void Hero::setEXP(int _xp)
-{
-    experience = _xp;
-}
-
-vector<Item *> Hero::getInventory()
-{
-    return inventory_items;
-}
-
-vector<Spell *> Hero::getOwnedSpells()
-{
-    return inventory_spells;
-}
-
-void Hero::displayStats()
-{
-    cout << getName() << "'s Stats:" << endl
-         << "Health Power : " << getHP() << endl
-         << "Magic Power : " << magicPower << endl
-         << "Strength : " << int(strength * 100) << " %" << endl
-         << "Dexterity : " << int(dexterity * 100) << " %" << endl
-         << "Agility : " << int(agility * 100) << " %" << endl
-         << "Money balance : " << getMoney() << " rubles" << endl
-         << "Level : " << getLevel() << endl
-         << "Experience : " << experience << endl
-         << endl
-         << endl;
-}
-
-void Hero::displayEquipment()
-{
-    cout << getName() << "'s Equipment :" << endl;
-    if (my_equipment.hand1 == NULL)
-        cout << "Left hand : Nothing Equipped" << endl;
-
-    else
-        cout << "Left hand : " << my_equipment.hand1->getName() << endl;
-
-    if (my_equipment.hand2 == NULL)
-        cout << "Right hand : Nothing Equipped" << endl;
-
-    else
-        cout << "Right hand : " << my_equipment.hand2->getName() << endl;
-
-    if (my_equipment.armor == NULL)
-        cout << "Armor : Nothing Equipped" << endl;
-
-    else
-        cout << "Armor : " << my_equipment.armor->getName() << endl;
-}
-
-void Hero::Equip()
-{
-    if (inventory_items.size() == 0)
-    {
-        cout << "There are no items in " << getName() << "'s inventory!" << endl;
-        return;
-    }
-    bool itemflag = false;
-    for (int i = 0; i < inventory_items.size(); i++)
-    {
-        if (inventory_items[i]->get_type() == 0 || inventory_items[i]->get_type() == 1)
-        {
-            itemflag = true;
-            break;
-        }
-    }
-    if (!itemflag)
-    {
-        cout << "There are no Weapons or Armors in your Inventory" << endl;
-        return;
-    }
-    show_inventory();
-    string item_name;
-    bool equipped = false;
-    int money;
-    while (!equipped)
-    {
-        cout << endl
-             << "Type the name of the item you want to equip:";
-        cin >> item_name;
-        cout << endl;
-        for (int i = 0; i < inventory_items.size(); i++)
-        {
-            if (item_name == inventory_items[i]->getName())
-            {
-                if (inventory_items[i]->get_type() == 0)
-                { // Weapon
-                    if (inventory_items[i]->getHands() == 2)
-                    {
-                        my_equipment.hand1 = inventory_items[i];
-                        my_equipment.hand2 = inventory_items[i];
-                        cout << inventory_items[i]->getName() << " has been equipped to both " << getName() << "'s hands" << endl;
-                    }
-                    if (inventory_items[i]->getHands() == 1)
-                    {
-                        if (inventory_items[i] == my_equipment.hand1 || inventory_items[i] == my_equipment.hand1)
-                        {
-                            cout << "This Item is already equipped!" << endl;
-                            return;
-                        }
-                        string hand_input;
-                        while (true)
-                        {
-                            cout << "In which hand do you want " << inventory_items[i]->getName() << " to be equipped. left or right? : ";
-                            cin >> hand_input;
-                            cout << endl;
-                            if (hand_input == "left")
-                            {
-                                my_equipment.hand1 = inventory_items[i];
-                                cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s left hand" << endl;
-                                break;
-                            }
-                            else if (hand_input == "right")
-                            {
-                                my_equipment.hand2 = inventory_items[i];
-                                cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s right hand" << endl;
-                                break;
-                            }
-                            else
-                            {
-                                cout << "Wrong input. Please TRY AGAIN." << endl;
-                            }
-                        }
-                        cout << endl;
-                    }
-                }
-                else if (inventory_items[i]->get_type() == 1)
-                { // Armor
-                    my_equipment.armor = inventory_items[i];
-                    cout << inventory_items[i]->getName() << " has been equipped to " << getName() << "'s armor" << endl;
-                }
-                else
-                { // Potion
-                    cout << "This item is a Potion, therefore it can't be equipped!" << endl;
-                }
-                equipped = true;
-                break;
-            }
-        }
-        if (!equipped)
-            cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
-    }
-}
-
-void Hero::usePotion()
-{
-    if (inventory_items.size() == 0)
-    {
-        cout << "There are no items in " << getName() << "'s inventory!" << endl;
-        return;
-    }
-    bool potionflag = false;
-    for (int i = 0; i < inventory_items.size(); i++)
-    {
-        if (inventory_items[i]->get_type() == 2 || inventory_items[i]->get_type() == 3 || inventory_items[i]->get_type() == 4)
-        {
-            potionflag = true;
-            break;
-        }
-    }
-    if (!potionflag)
-    {
-        cout << "There are no Potions in your Inventory" << endl;
-        return;
-    }
-    show_inventory();
-    string item_name;
-    bool used = false;
-    int money;
-    while (!used)
-    {
-        cout << endl
-             << "Type the name of the potion you want to use:";
-        cin >> item_name;
-        cout << endl;
-        for (int i = 0; i < inventory_items.size(); i++)
-        {
-            if (item_name == inventory_items[i]->getName())
-            {
-                if (inventory_items[i]->get_type() == 0)
-                { // Weapon
-                    cout << "This item is a Weapon, therefore in can't be consumed!" << endl;
-                }
-                else if (inventory_items[i]->get_type() == 1)
-                { // Armor
-                    cout << "This item is an Armor, therefore in can't be consumed!" << endl;
-                }
-                else
-                { // Potion
-                    if (inventory_items[i]->get_type() == 2)
-                    {
-                        strength = strength * (1 + inventory_items[i]->get_boost());
-                        cout << "Hurray! You used all of the Strength Potion." << endl;
-                        delete inventory_items[i];
-                        inventory_items.erase(inventory_items.begin() + i);
-                    }
-                    else if (inventory_items[i]->get_type() == 3)
-                    {
-                        dexterity = dexterity * (1 + inventory_items[i]->get_boost());
-                        cout << "Hurray! You used all of the Strength Potion." << endl;
-                        delete inventory_items[i];
-                        inventory_items.erase(inventory_items.begin() + i);
-                    }
-                    else if (inventory_items[i]->get_type() == 4)
-                    {
-                        agility = agility * (1 + inventory_items[i]->get_boost());
-                        cout << "Hurray! You used all of the Strength Potion." << endl;
-                        delete inventory_items[i];
-                        inventory_items.erase(inventory_items.begin() + i);
-                    }
-                }
-                used = true;
-                break;
-            }
-        }
-        if (!used)
-            cout << "The name of the Potion is not listed. Please TRY AGAIN" << endl;
-    }
-}
-
-Equipment Hero::getEquipment()
-{
-    return my_equipment;
-}
-
-Hero::~Hero()
-{
-}
-
-//Class Warrior
-Warrior::Warrior(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
-    : Hero(_name, _level, _healthPower, _magicPower, _strength, _dexterity, _agility, _money, _experience)
-{
-    Hero::set_strength(Hero::get_strength() * (1 + strength_boost));
-    Hero::set_agility(Hero::get_agility() * (1 + agility_boost));
-}
-void Warrior::LevelUp()
-{
-    cout << Living::get_name() << " is leveling Up!" << endl;
-    strength = strength + strength * (35.0 / 100.0);
-    agility = agility + agility * (30.0 / 100.0);
-    dexterity = dexterity + dexterity * (25.0 / 100.0);
-    set_level(get_Level() + 1);
-}
-Warrior::~Warrior() {}
-
-//Class Sorcerer
-Sorcerer::Sorcerer(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
-    : Hero(_name, _level, _healthPower, _magicPower, _strength, _dexterity, _agility, _money, _experience)
-{
-    Hero::set_dexterity(Hero::get_dexterity() * (1 + dexterity_boost));
-    Hero::set_agility(Hero::get_agility() * (1 + agility_boost));
-}
-void Sorcerer::LevelUp()
-{
-    cout << Living::get_name() << " is leveling Up!" << endl;
-    strength = strength + strength * (25.0 / 100.0);
-    agility = agility + agility * (30.0 / 100.0);
-    dexterity = dexterity + dexterity * (35.0 / 100.0);
-    set_level(get_Level() + 1);
-}
-
-Sorcerer::~Sorcerer() {}
-
-//Class Paladin
-Paladin::Paladin(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
-    : Hero(_name, _level, _healthPower, _magicPower, _strength, _dexterity, _agility, _money, _experience)
-{
-    Hero::set_strength(Hero::get_strength() * (1 + strength_boost));
-    Hero::set_dexterity(Hero::get_dexterity() * (1 + dexterity_boost));
-}
-void Paladin::LevelUp()
-{
-    cout << Living::get_name() << " is leveling Up!" << endl;
-    strength = strength + strength * (35.0 / 100.0);
-    agility = agility + agility * (25.0 / 100.0);
-    dexterity = dexterity + dexterity * (30.0 / 100.0);
-    set_level(get_Level() + 1);
-}
-
-Paladin::~Paladin() {}
-
-//Class Monster
-Monster::Monster(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
-    : Living(_name, _level, _healthPower), damage_var(_damage_var), defense(_defense), dodge_possibility(_dodge_possibility)
-{
-    on_fire = 0;
-    on_ice = 0;
-    on_lighting = 0;
-}
-
-int Monster::get_damage_var() const
-{
-    return damage_var;
-}
-void Monster::set_damage_var(int new_dmgvar)
-{
-    damage_var = new_dmgvar;
-}
-float Monster::get_defense() const
-{
-    return defense;
-}
-void Monster::set_defense(float new_defence)
-{
-    defense = new_defence;
-}
-float Monster::get_dodge_possibility() const
-{
-    return dodge_possibility;
-}
-void Monster::set_dodge_possibility(float new_dodgepos)
-{
-    dodge_possibility = new_dodgepos;
-}
-
-int Monster::get_onFire()
-{
-    return on_fire;
-}
-
-int Monster::get_onIce()
-{
-    return on_ice;
-}
-
-int Monster::get_onLighting()
-{
-    return on_lighting;
-}
-
-void Monster::set_onFire(int _rounds)
-{
-    on_fire = _rounds;
-}
-
-void Monster::set_onIce(int _rounds)
-{
-    on_ice = _rounds;
-}
-
-void Monster::set_onLIghting(int _rounds)
-{
-    on_lighting = _rounds;
-}
-
-int Monster::get_starting_dmg_var() {
-    return starting_dmg_var;
-}
-
-void Monster::set_starting_dmg_var(int _value) {
-    starting_dmg_var = _value;
-}
-
-float Monster::get_starting_defense() {
-    return starting_defense;
-}
-
-void Monster::set_starting_defense(float _value) {
-    starting_defense = _value;
-}
-
-float Monster::get_starting_dodge_pos() {
-    return starting_dodge_pos;
-}
-
-void Monster::set_starting_dodge_pos(float _value) {
-    starting_dodge_pos = _value;
-}
-
-void Monster::displayStats()
-{
-    cout << get_name() << "'s Stats:" << endl
-         << "Health Power : " << get_HP() << endl
-         << "Level : " << get_Level() << endl
-         << "Damage : " << get_damage_var() << " - " << get_damage_var() + 15 << endl
-         << "Defense : " << get_defense() << " %" << endl
-         << "Dodge Possibility : " << int(get_dodge_possibility() * 100) << " %" << endl
-         << endl;
-}
-
-Monster::~Monster() {}
-
-//Class Dragon
-Dragon::Dragon(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
-    : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
-{
-    Monster::set_damage_var(Monster::get_damage_var() * (1.0 + float(dmg_var_boost)));
-}
-
-Dragon::~Dragon() {}
-
-//Class Exoskeleton
-Exoskeleton::Exoskeleton(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
-    : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
-{
-    Monster::set_defense(Monster::get_defense() * (1.0 + float(defense_boost)));
-}
-
-Exoskeleton::~Exoskeleton() {}
-
-//Class Spirit
-Spirit::Spirit(string _name, int _level, int _healthPower, int _damage_var, int _defense, float _dodge_possibility)
-    : Monster(_name, _level, _healthPower, _damage_var, _defense, _dodge_possibility)
-{
-    Monster::set_dodge_possibility(Monster::get_dodge_possibility() * (1 + dodge_pos_boost));
-}
-
-Spirit::~Spirit() {}
-
 // Class Grid
 Grid::Grid(int _x, int _y, int _heroes_count)
     : x(_x), y(_y), heroes_count(_heroes_count), row(_x, common), my_grid(_y, row)
@@ -1504,7 +658,6 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *weapon_ptr = new Weapon((*it).name, (*it).price, (*it).base_level, (*it).damage, (*it).hands);
-                        //my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                         bool added = my_heroes[hero_number]->add_inventoryItem(weapon_ptr);
                         if (added)
                         {
@@ -1542,7 +695,6 @@ void Grid::BuyFromMarket()
                             break;
                         }
                         Item *armor_ptr = new Armor((*it).name, (*it).price, (*it).base_level, (*it).dmg_reduction);
-                        //my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                         bool added = my_heroes[hero_number]->add_inventoryItem(armor_ptr);
                         if (added)
                         {
@@ -1582,7 +734,6 @@ void Grid::BuyFromMarket()
                             potion_ptr = new DexterityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
                         else
                             potion_ptr = new AgilityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
-                        //my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                         bool added = my_heroes[hero_number]->add_inventoryItem(potion_ptr);
                         if (added)
                         {
@@ -1622,7 +773,6 @@ void Grid::BuyFromMarket()
                             spell_ptr = new FireSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
                         else
                             spell_ptr = new LightingSpell((*it).name, (*it).price, (*it).base_level, (*it).dmg_var, (*it).mana, (*it).reduction);
-                        //my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                         bool added = my_heroes[hero_number]->add_inventorySpell(spell_ptr);
                         if (added)
                         {
@@ -1730,9 +880,10 @@ void Grid::FightMenu(Hero *hero_ptr)
             Attack(hero_ptr);
             break;
         case 5:
-            if(hero_ptr->getOwnedSpells().size() > 0)
+            if (hero_ptr->getOwnedSpells().size() > 0)
                 castSpell(hero_ptr);
-            else {
+            else
+            {
                 cout << "You do not own any Spells!" << endl;
                 continue;
             }
@@ -1740,7 +891,7 @@ void Grid::FightMenu(Hero *hero_ptr)
         case 6:
         {
             bool potion_flag = false;
-            for (int i = 0; i<hero_ptr->getInventory().size(); i++)
+            for (int i = 0; i < hero_ptr->getInventory().size(); i++)
             {
                 if (hero_ptr->getInventory()[i]->get_type() != weapon && hero_ptr->getInventory()[i]->get_type() != armor)
                 {
@@ -1749,7 +900,8 @@ void Grid::FightMenu(Hero *hero_ptr)
                     break;
                 }
             }
-            if(!potion_flag) {
+            if (!potion_flag)
+            {
                 cout << "You have no potion in your inventory!" << endl;
                 continue;
             }
@@ -1833,15 +985,9 @@ void Grid::castSpell(Hero *hero_ptr)
     int mana_spent = selected_spell->get_mana();
     hero_ptr->setMP(hero_ptr->getMP() - mana_spent);
     int damage = 0;
-    //int onLighting_reduction = 1;
-    //if(my_monsters[monster_number]->get_onLighting() > 0)
-     //   onLighting_reduction = 2;
-    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0 ))
+    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0))
     {
         damage = (selected_spell->get_dmg_var() + (rand() % 16)) * (1 + hero_ptr->get_dexterity());
-        //if (my_monsters[monster_number]->get_onFire() > 0)
-        //    damage = damage - damage * float(my_monsters[monster_number]->get_defense()) * 0.025;
-        //else
         damage = damage - damage * float(my_monsters[monster_number]->get_defense()) / 100.0;
         my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage);
         cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage << " hit points" << endl;
@@ -1905,9 +1051,7 @@ void Grid::Attack(Hero *hero_ptr)
     }
     int damage;
     int onLighting_reduction = 1;
-    //if(my_monsters[monster_number]->get_onLighting() > 0)
-     //   onLighting_reduction = 2;
-    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0 ))
+    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0))
     {
         if (hero_ptr->getEquipment().hand1 != NULL && hero_ptr->getEquipment().hand2 != NULL)
             damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand1->get_dmg() + hero_ptr->getEquipment().hand2->get_dmg());
@@ -1917,9 +1061,6 @@ void Grid::Attack(Hero *hero_ptr)
             damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand2->get_dmg());
         else if (hero_ptr->getEquipment().hand1 == NULL && hero_ptr->getEquipment().hand2 == NULL) // If Hero fights with his fists
             damage = (1 + hero_ptr->get_strength()) * 10;
-        //if (my_monsters[monster_number]->get_onFire() < 0)
-        //    my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) * 0.025);
-        //else
         my_monsters[monster_number]->set_HP(my_monsters[monster_number]->get_HP() - damage + damage * float(my_monsters[monster_number]->get_defense()) / 100.0);
         cout << "====>" << hero_ptr->get_name() << " damaged " << my_monsters[monster_number]->get_name() << " for " << damage - damage * float(my_monsters[monster_number]->get_defense()) / 100.0 << " hit points" << endl;
         if (my_monsters[monster_number]->get_HP() < 0)
@@ -1938,7 +1079,8 @@ void Grid::Fight()
     bool flag_monsters_win = false;
     int monsters_with_hp_0_counter;
     int heroes_with_hp_0_counter;
-    for(int z=0; z<my_monsters.size(); z++) {
+    for (int z = 0; z < my_monsters.size(); z++)
+    {
         my_monsters[z]->set_starting_dmg_var(my_monsters[z]->get_damage_var());
         my_monsters[z]->set_starting_defense(my_monsters[z]->get_defense());
         my_monsters[z]->set_starting_dodge_pos(my_monsters[z]->get_dodge_possibility());
@@ -1972,8 +1114,6 @@ void Grid::Fight()
                 if (my_monsters[i]->get_HP() > 0)
                 {
                     int monster_dmg = my_monsters[i]->get_damage_var() + (rand() % 16);
-                    //if (my_monsters[i]->get_onIce() > 0)
-                    //    monster_dmg = monster_dmg - 5; // If affected from Ice Spell
                     int which_hero_to_attack;
                     while (true)
                     { // So the monster can't pick a hero with 0 hp to attack
