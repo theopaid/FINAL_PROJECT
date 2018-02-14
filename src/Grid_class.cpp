@@ -331,29 +331,96 @@ void Grid::createHero()
              << "Type your choice and press return : ";
         cin >> hero_type;
         cout << endl;
+        bool same_name = false;
         switch (hero_type)
         {
         case 1:
-            cout << "What do you want your Warrior to be called ? : ";
-            cin >> hero_name;
-            cout << endl;
-            hero_ptr = new Warrior(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
-            my_heroes.push_back(hero_ptr);
+        {
+            while (true)
+            {
+                same_name = false;
+                cout << "What do you want your Warrior to be called ? : ";
+                cin >> hero_name;
+                cout << endl;
+                for (int k = 0; k < my_heroes.size(); k++)
+                {
+                    if (my_heroes[k]->getName() == hero_name)
+                    {
+                        cout << "There is already a Hero named this way!" << endl;
+                        same_name = true;
+                        break;
+                    }
+                }
+                if (!same_name)
+                    break;
+            }
+            if (!same_name)
+            {
+                hero_ptr = new Warrior(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
+                my_heroes.push_back(hero_ptr);
+            }
+            else
+                continue;
             break;
+        }
         case 2:
-            cout << "What do you want your Sorcerer to be called ? : ";
-            cin >> hero_name;
-            cout << endl;
-            hero_ptr = new Sorcerer(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
-            my_heroes.push_back(hero_ptr);
+        {
+            while (true)
+            {
+                same_name = false;
+                cout << "What do you want your Sorcerer to be called ? : ";
+                cin >> hero_name;
+                cout << endl;
+                for (int k = 0; k < my_heroes.size(); k++)
+                {
+                    if (my_heroes[k]->getName() == hero_name)
+                    {
+                        cout << "There is already a Hero named this way!" << endl;
+                        same_name = true;
+                        break;
+                    }
+                }
+                if (!same_name)
+                    break;
+            }
+            if (!same_name)
+            {
+                hero_ptr = new Sorcerer(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
+                my_heroes.push_back(hero_ptr);
+            }
+            else
+                continue;
             break;
+        }
         case 3:
-            cout << "What do you want your Paladin to be called ? : ";
-            cin >> hero_name;
-            cout << endl;
-            hero_ptr = new Paladin(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
-            my_heroes.push_back(hero_ptr);
+        {
+            while (true)
+            {
+                same_name = false;
+                cout << "What do you want your Paladin to be called ? : ";
+                cin >> hero_name;
+                cout << endl;
+                for (int k = 0; k < my_heroes.size(); k++)
+                {
+                    if (my_heroes[k]->getName() == hero_name)
+                    {
+                        cout << "There is already a Hero named this way!" << endl;
+                        same_name = true;
+                        break;
+                    }
+                }
+                if(!same_name)
+                    break;
+            }
+            if (!same_name)
+            {
+                hero_ptr = new Paladin(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
+                my_heroes.push_back(hero_ptr);
+            }
+            else
+                continue;
             break;
+        }
         default:
             cout << "==> Your input was wrong, please TRY AGAIN <==" << endl;
             continue;
@@ -394,8 +461,10 @@ void Grid::createMonsters()
     int monsters_to_create = rand() % my_heroes.size() + 1;
     int multiplier = 1 + 0.2 * (my_heroes[0]->getLevel() - 1);
     Monster *monster_ptr;
+    bool deleted;
     for (int i = 0; i < monsters_to_create; i++)
     {
+        deleted = false;
         int monster_type = rand() % 3 + 1;
         switch (monster_type)
         {
@@ -407,11 +476,14 @@ void Grid::createMonsters()
                 {
                     i--;
                     delete monster_ptr;
-                    continue;
+                    deleted = true;
+                    break;
                 }
             }
-            cout << "====> A Dragon has been found! <====" << endl;
-            my_monsters.push_back(monster_ptr);
+            if(!deleted) {
+                cout << "====> A Dragon has been found! <====" << endl;
+                my_monsters.push_back(monster_ptr);
+            }
             break;
         case 2:
             monster_ptr = new Exoskeleton("kurios_kokkalakias", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
@@ -421,11 +493,14 @@ void Grid::createMonsters()
                 {
                     i--;
                     delete monster_ptr;
-                    continue;
+                    deleted = true;
+                    break;
                 }
             }
-            cout << "====> An Exoskeleton has been found! <====" << endl;
-            my_monsters.push_back(monster_ptr);
+            if(!deleted) {
+                cout << "====> An Exoskeleton has been found! <====" << endl;
+                my_monsters.push_back(monster_ptr);
+            }
             break;
         case 3:
             monster_ptr = new Spirit("kurios_pneumonas", my_heroes[0]->getLevel(), 70 * multiplier, 11, 10 * multiplier, 0.2);
@@ -435,11 +510,14 @@ void Grid::createMonsters()
                 {
                     i--;
                     delete monster_ptr;
-                    continue;
+                    deleted = true;
+                    break;
                 }
             }
-            cout << "====> A Spirit has been found! <====" << endl;
-            my_monsters.push_back(monster_ptr);
+            if(!deleted){
+                cout << "====> A Spirit has been found! <====" << endl;
+                my_monsters.push_back(monster_ptr);
+            }
             break;
         }
     }

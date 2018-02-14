@@ -335,7 +335,7 @@ void Hero::Equip()
                     }
                     if (inventory_items[i]->getHands() == 1)
                     {
-                        if (inventory_items[i] == my_equipment.hand1 || inventory_items[i] == my_equipment.hand1)
+                        if (inventory_items[i] == my_equipment.hand1 || inventory_items[i] == my_equipment.hand2)
                         {
                             cout << "This Item is already equipped!" << endl;
                             return;
