@@ -983,6 +983,7 @@ void Grid::FightMenu(Hero *hero_ptr)
                 cout << "You have no potion in your inventory!" << endl;
                 continue;
             }
+            break;
         }
         case 7:
             hero_ptr->Equip();
@@ -998,7 +999,7 @@ void Grid::FightMenu(Hero *hero_ptr)
             exit(0);
         default:
             cout << "Your input was wrong. Please TRY AGAIN." << endl;
-            break;
+            continue;
         }
         cin.clear();
         cin.ignore(INT_MAX, '\n');
