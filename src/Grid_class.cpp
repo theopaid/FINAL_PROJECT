@@ -19,7 +19,7 @@ Grid::Grid(int _x, int _y, int _heroes_count)
     cout << "The map is getting rendered!" << endl;
     createMap(x, y);
     cout << "Now the market is being created!" << endl;
-    createMarket();
+    my_market = new Market();
 }
 
 void Grid::createMap(int x, int y)
@@ -184,131 +184,6 @@ void Grid::move()
             Fight();
         }
     }
-}
-
-void Grid::createMarket()
-{
-    // List of Weapons
-    ifstream WeaponsFile;
-    WeaponsFile.open("weapons.txt");
-    if (!WeaponsFile)
-    {
-        cerr << "Unable to open file weapons.txt";
-        exit(1);
-    }
-    WeaponNode w_struct;
-    while (WeaponsFile >> w_struct.name >> w_struct.price >> w_struct.base_level >> w_struct.damage >> w_struct.hands)
-        WeaponList.push_back(w_struct);
-    WeaponsFile.close();
-    // List of Armors
-    ifstream ArmorsFile;
-    ArmorsFile.open("armors.txt");
-    if (!ArmorsFile)
-    {
-        cerr << "Unable to open file armors.txt";
-        exit(1);
-    }
-    ArmorNode a_struct;
-    while (ArmorsFile >> a_struct.name >> a_struct.price >> a_struct.base_level >> a_struct.dmg_reduction)
-        ArmorList.push_back(a_struct);
-    ArmorsFile.close();
-    // List of Potions
-    ifstream PotionsFile;
-    PotionsFile.open("potions.txt");
-    if (!PotionsFile)
-    {
-        cerr << "Unable to open file potion.txt";
-        exit(1);
-    }
-    PotionsNode p_struct;
-    while (PotionsFile >> p_struct.name >> p_struct.price >> p_struct.base_level >> p_struct.boost >> p_struct.type)
-        PotionsList.push_back(p_struct);
-    PotionsFile.close();
-    // List of Spells
-    ifstream SpellsFile;
-    SpellsFile.open("spells.txt");
-    if (!SpellsFile)
-    {
-        cerr << "Unable to open file spells.txt";
-        exit(1);
-    }
-    SpellsNode s_struct;
-    while (SpellsFile >> s_struct.name >> s_struct.price >> s_struct.base_level >> s_struct.dmg_var >> s_struct.mana >> s_struct.reduction >> s_struct.type)
-        SpellsList.push_back(s_struct);
-    SpellsFile.close();
-}
-
-void Grid::show_market()
-{
-    cout << "/////////////// MARKET ////////////////" << endl
-         << endl;
-    //Weapons
-    int j = 0;
-    cout << "Weapons you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage || How many hands " << endl;
-    for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
-    {
-        j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << endl;
-    }
-    cout << endl;
-    //Armors
-    cout << "Armors you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage Reduction " << endl;
-    for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
-    {
-        j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << " %" << endl;
-    }
-    cout << endl;
-    //Potions
-    for (list<PotionsNode>::iterator it = PotionsList.begin(); it != PotionsList.end(); ++it)
-    {
-        j++;
-        if ((*it).type == "strength")
-        {
-            cout << "Strength Potions you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Strength Boost " << endl;
-        }
-        if ((*it).type == "dexterity")
-        {
-            cout << endl;
-            cout << "Dexterity Potions you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Dexterity Boost " << endl;
-        }
-        if ((*it).type == "agility")
-        {
-            cout << endl;
-            cout << "Agility Potions you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Agility Boost " << endl;
-        }
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << int((*it).boost * 100) << " %" << endl;
-    }
-    cout << endl;
-    //Spells
-    for (list<SpellsNode>::iterator it = SpellsList.begin(); it != SpellsList.end(); ++it)
-    {
-        j++;
-        if ((*it).type == "ice")
-        {
-            cout << "Ice Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Base Damage || Mana || Base Damage Reduction " << endl;
-        }
-        if ((*it).type == "fire")
-        {
-            cout << endl;
-            cout << "Fire Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Base Damage || Mana || Defense Reduction " << endl;
-        }
-        if ((*it).type == "lighting")
-        {
-            cout << endl;
-            cout << "Lighting Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Base Damage || Mana || Dodge Possibility Reduction " << endl;
-        }
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << " %" << endl;
-    }
-    cout << endl;
 }
 
 void Grid::createHero()
@@ -574,7 +449,7 @@ void Grid::Menu()
             BuyFromMarket();
             break;
         case 7:
-            show_market();
+            my_market->show_market();
             break;
         case 11:
             HeroToEquip();
@@ -683,6 +558,10 @@ void Grid::displayMonsterStats()
 
 void Grid::BuyFromMarket()
 {
+    list<WeaponNode> weapons_list;
+    list<ArmorNode> armors_list;
+    list<SpellsNode> spells_list;
+    list<PotionsNode> potions_list;
     if (my_grid[pos_x - 1][pos_y - 1] != 1)
     {
         cout << "You are not at Market position!" << endl;
@@ -713,7 +592,7 @@ void Grid::BuyFromMarket()
                      << "There is no Hero named this way, please TRY AGAIN" << endl;
         }
     }
-    show_market();
+    my_market->show_market();
     int input;
     while (true)
     {
@@ -725,8 +604,9 @@ void Grid::BuyFromMarket()
         {
             if (input <= 5)
             {
-                i = 1;
-                for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
+                weapons_list = my_market->get_weapons();
+                                   i = 1;
+                for (list<WeaponNode>::iterator it = weapons_list.begin(); it != weapons_list.end(); ++it)
                 {
                     if (input == i)
                     {
@@ -762,8 +642,9 @@ void Grid::BuyFromMarket()
             }
             else if (input <= 10)
             {
-                i = 6;
-                for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
+                armors_list = my_market->get_armors();
+                                  i = 6;
+                for (list<ArmorNode>::iterator it = armors_list.begin(); it != armors_list.end(); ++it)
                 {
                     if (input == i)
                     {
@@ -795,8 +676,9 @@ void Grid::BuyFromMarket()
             }
             else if (input <= 25)
             {
-                i = 11;
-                for (list<PotionsNode>::iterator it = PotionsList.begin(); it != PotionsList.end(); ++it)
+                potions_list = my_market->get_potions();
+                                   i = 11;
+                for (list<PotionsNode>::iterator it = potions_list.begin(); it != potions_list.end(); ++it)
                 {
                     if (input == i)
                     {
@@ -834,8 +716,9 @@ void Grid::BuyFromMarket()
             }
             else if (input <= 40)
             {
-                i = 26;
-                for (list<SpellsNode>::iterator it = SpellsList.begin(); it != SpellsList.end(); ++it)
+                spells_list = my_market->get_spells();
+                                  i = 26;
+                for (list<SpellsNode>::iterator it = spells_list.begin(); it != spells_list.end(); ++it)
                 {
                     if (input == i)
                     {
@@ -954,7 +837,7 @@ void Grid::sellSpells()
 bool Grid::ChanceToFight()
 {
     int chance = rand() % 100 + 1;
-    if (chance <= 35)
+    if (chance <= 45) // 45% chance to fight
         return true;
     else
         return false;
