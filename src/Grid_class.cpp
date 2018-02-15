@@ -409,7 +409,7 @@ void Grid::createHero()
                         break;
                     }
                 }
-                if(!same_name)
+                if (!same_name)
                     break;
             }
             if (!same_name)
@@ -480,7 +480,8 @@ void Grid::createMonsters()
                     break;
                 }
             }
-            if(!deleted) {
+            if (!deleted)
+            {
                 cout << "====> A Dragon has been found! <====" << endl;
                 my_monsters.push_back(monster_ptr);
             }
@@ -497,7 +498,8 @@ void Grid::createMonsters()
                     break;
                 }
             }
-            if(!deleted) {
+            if (!deleted)
+            {
                 cout << "====> An Exoskeleton has been found! <====" << endl;
                 my_monsters.push_back(monster_ptr);
             }
@@ -514,7 +516,8 @@ void Grid::createMonsters()
                     break;
                 }
             }
-            if(!deleted){
+            if (!deleted)
+            {
                 cout << "====> A Spirit has been found! <====" << endl;
                 my_monsters.push_back(monster_ptr);
             }
@@ -913,7 +916,8 @@ void Grid::SelltoMarket()
     my_heroes[hero_number]->remove_inventoryItem();
 }
 
-void Grid::sellSpells() {
+void Grid::sellSpells()
+{
     if (my_grid[pos_x - 1][pos_y - 1] != 1)
     {
         cout << "You are not at Market position!" << endl;
@@ -1360,7 +1364,13 @@ void Grid::Fight()
     }
 }
 
-Grid::~Grid() {}
+Grid::~Grid()
+{
+    for (int i = 0; i < my_heroes.size(); i++)
+    {
+        delete my_heroes[i];
+    }
+}
 
 void welcome()
 {

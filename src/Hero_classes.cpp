@@ -142,7 +142,8 @@ void Hero::remove_inventoryItem()
     }
 }
 
-void Hero::remove_inventorySpell() {
+void Hero::remove_inventorySpell()
+{
     if (inventory_spells.size() == 0)
     {
         cout << "There are no Spells in " << getName() << "'s inventory!" << endl;
@@ -502,6 +503,14 @@ Equipment Hero::getEquipment()
 
 Hero::~Hero()
 {
+    for (int i = 0; i < inventory_items.size(); i++)
+    {
+        delete inventory_items[i];
+    }
+    for (int i = 0; i < inventory_spells.size(); i++)
+    {
+        delete inventory_spells[i];
+    }
 }
 
 //Class Warrior

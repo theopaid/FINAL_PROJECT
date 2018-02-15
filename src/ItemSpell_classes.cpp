@@ -165,7 +165,8 @@ int Spell::get_mana()
     return mana;
 }
 
-int Spell::getPrice() {
+int Spell::getPrice()
+{
     return price;
 }
 
