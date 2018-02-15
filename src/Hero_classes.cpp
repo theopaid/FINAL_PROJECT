@@ -141,6 +141,41 @@ void Hero::remove_inventoryItem()
             cout << "The name of the item is not listed. Please TRY AGAIN" << endl;
     }
 }
+
+void Hero::remove_inventorySpell() {
+    if (inventory_spells.size() == 0)
+    {
+        cout << "There are no Spells in " << getName() << "'s inventory!" << endl;
+        return;
+    }
+    show_spells();
+    string spell_name;
+    bool sold = false;
+    int money;
+    while (!sold)
+    {
+        cout << endl
+             << "Type the name of the Spell you want to sell:";
+        cin >> spell_name;
+        cout << endl;
+        for (int i = 0; i < inventory_spells.size(); i++)
+        {
+            if (spell_name == inventory_spells[i]->getName())
+            {
+                money = inventory_spells[i]->getPrice() / 2;
+                setMoney(getMoney() + inventory_spells[i]->getPrice() / 2);
+                delete inventory_spells[i];
+                inventory_spells.erase(inventory_spells.begin() + i);
+                cout << spell_name << " has been sold for " << money << " rubles." << endl;
+                sold = true;
+                break;
+            }
+        }
+        if (!sold)
+            cout << "The name of the Spell is not listed. Please TRY AGAIN" << endl;
+    }
+}
+
 void Hero::show_inventory()
 {
     string type;

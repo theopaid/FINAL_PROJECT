@@ -165,6 +165,10 @@ int Spell::get_mana()
     return mana;
 }
 
+int Spell::getPrice() {
+    return price;
+}
+
 Spell::~Spell() {}
 
 // Class IceSpell

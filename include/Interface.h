@@ -183,6 +183,7 @@ class Spell
     string getName();
     int get_dmg_var();
     int get_mana();
+    int getPrice();
     virtual int spell_poisoning() = 0;
     ~Spell();
 };
@@ -261,6 +262,7 @@ class Hero : public Living
     bool add_inventoryItem(Item *);
     bool add_inventorySpell(Spell *);
     void remove_inventoryItem();
+    void remove_inventorySpell();
     void show_inventory();
     void show_spells();
     int getMoney() const;
@@ -407,6 +409,7 @@ class Grid
     void Menu();
     void BuyFromMarket();
     void SelltoMarket();
+    void sellSpells();
     void displayHeroStats();
     void displayMonsterStats();
     void HeroToEquip();

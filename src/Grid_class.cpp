@@ -545,6 +545,7 @@ void Grid::Menu()
              << "10 - Quit the Game" << endl
              << "11 - Use a Potion" << endl
              << "12 - Display owned Spells" << endl
+             << "13 - Sell owned Spells" << endl
              << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
@@ -588,6 +589,9 @@ void Grid::Menu()
         case 12:
             for (int i = 0; i < my_heroes.size(); i++)
                 my_heroes[i]->show_spells();
+            break;
+        case 13:
+            sellSpells();
             break;
         default:
             cout << "Your input was wrong. Please TRY AGAIN." << endl;
@@ -907,6 +911,40 @@ void Grid::SelltoMarket()
         }
     }
     my_heroes[hero_number]->remove_inventoryItem();
+}
+
+void Grid::sellSpells() {
+    if (my_grid[pos_x - 1][pos_y - 1] != 1)
+    {
+        cout << "You are not at Market position!" << endl;
+        return;
+    }
+    int hero_number = 0;
+    if (my_heroes.size() > 1)
+    {
+        string hero_input;
+        bool flag = false;
+        while (!flag)
+        {
+            hero_number = 0;
+            cout << "Type the name of the hero you want the transaction to happen:";
+            cin >> hero_input;
+            cout << endl;
+            for (int i = 0; i < my_heroes.size(); i++)
+            {
+                if (hero_input == my_heroes[i]->getName())
+                {
+                    flag = true;
+                    break;
+                }
+                hero_number++;
+            }
+            if (flag == false)
+                cout << endl
+                     << "There is no Hero named this way, please TRY AGAIN" << endl;
+        }
+    }
+    my_heroes[hero_number]->remove_inventorySpell();
 }
 
 bool Grid::ChanceToFight()
