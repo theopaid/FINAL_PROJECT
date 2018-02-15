@@ -537,18 +537,18 @@ void Grid::Menu()
              << endl
              << "Here are the options you have : " << endl
              << "1 - Display the Map" << endl
-             << "2 - Check the Inventory" << endl
+             << "2 - Move your Hero(es)" << endl
              << "3 - Display the stats of your Hero(s)" << endl
-             << "4 - Sell an Item from your Inventory" << endl
-             << "5 - Move your Hero(s)" << endl
-             << "6 - Buy an item or a spell from the market" << endl
+             << "4 - Display Equipment" << endl
+             << "5 - Check the Inventory" << endl
+             << "6 - Display owned Spells" << endl
              << "7 - Show the Market" << endl
-             << "8 - Equip an item" << endl
-             << "9 - Display Equipment" << endl
-             << "10 - Quit the Game" << endl
-             << "11 - Use a Potion" << endl
-             << "12 - Display owned Spells" << endl
-             << "13 - Sell owned Spells" << endl
+             << "8 - Buy an item or a spell from the market" << endl
+             << "9 - Sell an Item from your Inventory" << endl
+             << "10 - Sell an owned Spell" << endl
+             << "11 - Equip an item" << endl
+             << "12 - Use a Potion" << endl
+             << "13 - Quit the Game" << endl
              << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
@@ -557,43 +557,43 @@ void Grid::Menu()
         case 1:
             displayMap();
             break;
-        case 2:
+        case 5:
             for (int i = 0; i < my_heroes.size(); i++)
                 my_heroes[i]->show_inventory();
             break;
         case 3:
             displayHeroStats();
             break;
-        case 4:
+        case 9:
             SelltoMarket();
             break;
-        case 5:
+        case 2:
             move();
             break;
-        case 6:
+        case 8:
             BuyFromMarket();
             break;
         case 7:
             show_market();
             break;
-        case 8:
+        case 11:
             HeroToEquip();
             break;
-        case 9:
+        case 4:
             for (int i = 0; i < my_heroes.size(); i++)
                 my_heroes[i]->displayEquipment();
             break;
-        case 10:
+        case 13:
             cout << "It was fun while it lasted. GGWP :D" << endl;
             exit(0);
-        case 11:
+        case 12:
             HeroToUsePotion();
             break;
-        case 12:
+        case 6:
             for (int i = 0; i < my_heroes.size(); i++)
                 my_heroes[i]->show_spells();
             break;
-        case 13:
+        case 10:
             sellSpells();
             break;
         default:
@@ -973,13 +973,13 @@ void Grid::FightMenu(Hero *hero_ptr)
              << "Here are the options you have : " << endl
              << "1 - Display the Map" << endl
              << "2 - Check the Inventory" << endl
-             << "3 - Display the stats of your Hero(s) and the Monsters" << endl
-             << "4 - Attack" << endl
-             << "5 - Cast Spell" << endl
-             << "6 - Use a Potion" << endl
-             << "7 - Equip an item" << endl
-             << "8 - Display Equipment" << endl
-             << "9 - Display owned Spells" << endl
+             << "3 - Display the stats of your Hero(es) and the Monsters" << endl
+             << "4 - Display Equipment" << endl
+             << "5 - Display owned Spells" << endl
+             << "6 - Attack" << endl
+             << "7 - Cast Spell" << endl
+             << "8 - Use a Potion" << endl
+             << "9 - Equip an item" << endl
              << "10 - Quit the Game" << endl
              << "Type your choice and press return : ";
         cin >> input;
@@ -996,10 +996,10 @@ void Grid::FightMenu(Hero *hero_ptr)
             displayHeroStats();
             displayMonsterStats();
             continue;
-        case 4:
+        case 6:
             Attack(hero_ptr);
             break;
-        case 5:
+        case 7:
             if (hero_ptr->getOwnedSpells().size() > 0)
                 castSpell(hero_ptr);
             else
@@ -1008,7 +1008,7 @@ void Grid::FightMenu(Hero *hero_ptr)
                 continue;
             }
             break;
-        case 6:
+        case 8:
         {
             bool potion_flag = false;
             for (int i = 0; i < hero_ptr->getInventory().size(); i++)
@@ -1027,13 +1027,13 @@ void Grid::FightMenu(Hero *hero_ptr)
             }
             break;
         }
-        case 7:
+        case 9:
             hero_ptr->Equip();
             break;
-        case 8:
+        case 4:
             hero_ptr->displayEquipment();
             continue;
-        case 9:
+        case 5:
             hero_ptr->show_spells();
             continue;
         case 10:
@@ -1375,7 +1375,23 @@ Grid::~Grid()
 void welcome()
 {
     string input;
-    cout << "Welcome to the game!" << endl;
+    cout << endl
+         << "*** Welcome to the game! ***" << endl
+         << endl
+         << " * You must kill all the monsters you encounter while you explore the map." << endl
+         << endl
+         << " * Winning fights grants you more money and access to more powerful Items and Spells in the Market, " << endl
+         << "    so you can expand your Stash." << endl
+         << endl
+         << " * TIP: Your fists don't deal a lot of damage, so rush to a Market and buy Weapons." << endl
+         << endl
+         << " * Every time you move to a Common position, theres a chance your footsteps wake up the Monsters that live there." << endl
+         << "    You will have to fight them, to move on to your journey." << endl
+         << endl
+         << " * To be successful in this Game, you have to prey to RNJesus." << endl
+         << endl
+         << " Good Luck Traveler!" << endl
+         << endl;
     while (true)
     {
         cout << "Αre you ready to play? (yes|no) : ";
