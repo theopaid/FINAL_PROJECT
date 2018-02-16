@@ -44,7 +44,7 @@ Living::~Living() {}
 Hero::Hero(string _name, int _level, int _healthPower, int _magicPower, float _strength, float _dexterity, float _agility, int _money, int _experience)
     : Living(_name, _level, _healthPower), magicPower(_magicPower), strength(_strength), dexterity(_dexterity), agility(_agility), money(_money), experience(_experience)
 {
-    my_equipment.hand1 = NULL;
+    my_equipment.hand1 = NULL; // If there is nothing equipped, we can identify it by seeing that its value is NULL
     my_equipment.hand2 = NULL;
     my_equipment.armor = NULL;
 }

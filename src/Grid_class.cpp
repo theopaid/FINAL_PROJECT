@@ -26,7 +26,7 @@ void Grid::createMap(int x, int y)
 {
     int my_square;
     ifstream MapFile;
-    MapFile.open("map.txt");
+    MapFile.open("map.txt"); // Our map is static
     if (!MapFile)
     {
         cerr << "Unable to open file map.txt";
@@ -40,7 +40,7 @@ void Grid::createMap(int x, int y)
             switch (my_square)
             {
             case 2:
-                my_grid[i][j] = common;
+                my_grid[i][j] = common; // Using the enumerations
                 break;
             case 1:
                 my_grid[i][j] = market;
@@ -85,7 +85,7 @@ void Grid::displayMap()
     for (int i = 0; i < x * 2 + 1; i++)
         cout << "-";
     cout << endl;
-    cout << "Your position is : [ " << pos_x << " , " << pos_y << " ]." << endl;
+    cout << "Your position is : [ " << pos_x << " , " << pos_y << " ]." << endl; //pos_x and pos_y contain the position of our Heroes
 }
 
 void Grid::move()
@@ -174,7 +174,7 @@ void Grid::move()
     cout << endl;
     if (my_grid[pos_x - 1][pos_y - 1] == 2)
     {
-        if (!ChanceToFight())
+        if (!ChanceToFight()) // Every time our Heroes move to a new location, theres a chance they encounter some monsters
         {
             cout << "No monsters found at your new position." << endl;
             return;
@@ -215,7 +215,7 @@ void Grid::createHero()
             {
                 same_name = false;
                 cout << "What do you want your Warrior to be called ? : ";
-                cin >> hero_name;
+                cin >> hero_name; // We give the option to the player to name his Heroes
                 cout << endl;
                 for (int k = 0; k < my_heroes.size(); k++)
                 {
@@ -235,7 +235,7 @@ void Grid::createHero()
                 my_heroes.push_back(hero_ptr);
             }
             else
-                continue;
+                continue; // If the same name is given, we restart the action to name a Hero
             break;
         }
         case 2:
@@ -289,8 +289,8 @@ void Grid::createHero()
             }
             if (!same_name)
             {
-                hero_ptr = new Paladin(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100);
-                my_heroes.push_back(hero_ptr);
+                hero_ptr = new Paladin(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100); // All the Hero's constructor get the sameinput value,
+                my_heroes.push_back(hero_ptr); // and the adjustions happen inside the constructors
             }
             else
                 continue;
@@ -341,7 +341,7 @@ void Grid::createMonsters()
     {
         deleted = false;
         int monster_type = rand() % 3 + 1;
-        switch (monster_type)
+        switch (monster_type) // We dont want the same type of monsters to be created
         {
         case 1:
             monster_ptr = new Dragon("kurios_fwtias", my_heroes[0]->getLevel(), 70.0 * multiplier, 11, 10.0 * multiplier, 0.2);
@@ -592,7 +592,7 @@ void Grid::BuyFromMarket()
                      << "There is no Hero named this way, please TRY AGAIN" << endl;
         }
     }
-    my_market->show_market();
+    my_market->show_market(); // Display the options of what the player can buy
     int input;
     while (true)
     {
@@ -717,7 +717,7 @@ void Grid::BuyFromMarket()
             else if (input <= 40)
             {
                 spells_list = my_market->get_spells();
-                                  i = 26;
+                i = 26;
                 for (list<SpellsNode>::iterator it = spells_list.begin(); it != spells_list.end(); ++it)
                 {
                     if (input == i)
@@ -867,7 +867,7 @@ void Grid::FightMenu(Hero *hero_ptr)
              << "Type your choice and press return : ";
         cin >> input;
         cout << endl;
-        switch (input)
+        switch (input) // continue; for the options that dont count as a round for the player and break; for those tat count
         {
         case 1:
             displayMap();
@@ -1161,7 +1161,7 @@ void Grid::Fight()
                 if (my_monsters[h]->get_onIce() > 0)
                     my_monsters[h]->set_onIce(my_monsters[h]->get_onIce() - 1); // When a round ends, the duration of the poisoning of the spells gets reduced
                 else
-                    my_monsters[h]->set_damage_var(my_monsters[h]->get_starting_dmg_var());
+                    my_monsters[h]->set_damage_var(my_monsters[h]->get_starting_dmg_var());// Return to the starting values, before the Spell was casted
                 if (my_monsters[h]->get_onFire() > 0)
                     my_monsters[h]->set_onFire(my_monsters[h]->get_onFire() - 1);
                 else
@@ -1194,7 +1194,7 @@ void Grid::Fight()
             {
                 if (my_monsters[j]->get_HP() != 0)
                 {
-                    if (my_heroes[j]->get_HP() < 70 * multiplier)
+                    if (my_monsters[j]->get_HP() < 70 * multiplier)
                         cout << "====> " << my_monsters[j]->get_name() << " restored " << 70 * multiplier * (0.10) << " health power" << endl;
                     my_monsters[j]->set_HP(my_monsters[j]->get_HP() + 70 * multiplier * (0.10));
                     if (my_monsters[j]->get_HP() > 70 * multiplier)
