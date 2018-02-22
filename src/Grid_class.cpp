@@ -1271,7 +1271,7 @@ void welcome()
          << " * Every time you move to a Common position, theres a chance your footsteps wake up the Monsters that live there." << endl
          << "    You will have to fight them, to move on to your journey." << endl
          << endl
-         << " * To be successful in this Game, you have to prey to RNJesus." << endl
+         << " * To be successful in this Game, you have to pray to RNJesus." << endl
          << endl
          << " Good Luck Traveler!" << endl
          << endl;

@@ -11,7 +11,8 @@
 using namespace std;
 
 // Class Market
-Market::Market() {
+Market::Market()
+{
     // List of Weapons
     ifstream WeaponsFile;
     WeaponsFile.open("weapons.txt");
@@ -62,26 +63,38 @@ Market::Market() {
     SpellsFile.close();
 }
 
-void Market::show_market() {
+void Market::show_market()
+{
     cout << "/////////////// MARKET ////////////////" << endl
          << endl;
     //Weapons
     int j = 0;
     cout << "Weapons you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage || How many hands " << endl;
+    string s = "Name";
+    s.resize(13, ' ');
+    cout << "         " << s << "|| Price || Level Requirement || Damage || How many hands " << endl;
     for (list<WeaponNode>::iterator it = WeaponList.begin(); it != WeaponList.end(); ++it)
     {
         j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << endl;
+        string k = (*it).name;
+        k.resize(13, ' ');
+        cout << j << " - " << k << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).damage << "     ||     " << (*it).hands << endl;
     }
     cout << endl;
     //Armors
     cout << "Armors you can BUY: " << endl;
-    cout << " Name || Price || Level Requirement || Damage Reduction " << endl;
+    s = "Name";
+    s.resize(12, ' ');
+    cout << "          " << s << "|| Price || Level Requirement || Damage " << endl;
     for (list<ArmorNode>::iterator it = ArmorList.begin(); it != ArmorList.end(); ++it)
     {
         j++;
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << " %" << endl;
+        string k = (*it).name;
+        if(k == "Aegis_Shield")
+            k.resize(12, ' ');
+        else
+            k.resize(13, ' ');
+        cout << j << " - " << k << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_reduction << " %" << endl;
     }
     cout << endl;
     //Potions
@@ -91,21 +104,27 @@ void Market::show_market() {
         if ((*it).type == "strength")
         {
             cout << "Strength Potions you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Strength Boost " << endl;
+
+            cout << "           " << s << "|| Price || Level Requirement || Strength Boost " << endl;
         }
         if ((*it).type == "dexterity")
         {
             cout << endl;
             cout << "Dexterity Potions you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Dexterity Boost " << endl;
+            cout << "          " << s << "|| Price || Level Requirement || Dexterity Boost " << endl;
         }
         if ((*it).type == "agility")
         {
             cout << endl;
             cout << "Agility Potions you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Agility Boost " << endl;
+            cout << "          " << s << "|| Price || Level Requirement || Agility Boost " << endl;
         }
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << int((*it).boost * 100) << " %" << endl;
+        string k = (*it).name;
+        k.resize(12, ' ');
+        if((*it).price < 10)
+            cout << j << " - " << k << "     ||     " << (*it).price << "      ||     " << (*it).base_level << "     ||     " << int((*it).boost * 100) << " %" << endl;
+        else
+            cout << j << " - " << k << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << int((*it).boost * 100) << " %" << endl;
     }
     cout << endl;
     //Spells
@@ -115,41 +134,47 @@ void Market::show_market() {
         if ((*it).type == "ice")
         {
             cout << "Ice Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Base Damage || Mana || Base Damage Reduction " << endl;
+            cout << "          " << s << "|| Price || Level Requirement || Base Damage || Mana || Base Damage Reduction " << endl;
         }
         if ((*it).type == "fire")
         {
             cout << endl;
             cout << "Fire Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Base Damage || Mana || Defense Reduction " << endl;
+            cout << "          " << s << "|| Price || Level Requirement || Base Damage || Mana || Defense Reduction " << endl;
         }
         if ((*it).type == "lighting")
         {
             cout << endl;
             cout << "Lighting Spells you can BUY: " << endl;
-            cout << " Name || Price || Level Requirement || Base Damage || Mana || Dodge Possibility Reduction " << endl;
+            cout << "          " << s << "|| Price || Level Requirement || Base Damage || Mana || Dodge Possibility Reduction " << endl;
         }
-        cout << j << " - " << (*it).name << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << " %" << endl;
+        string k = (*it).name;
+        k.resize(12, ' ');
+        cout << j << " - " << k << "     ||     " << (*it).price << "     ||     " << (*it).base_level << "     ||     " << (*it).dmg_var << "     ||     " << (*it).mana << "     ||     " << (*it).reduction << " %" << endl;
     }
     cout << endl;
 }
 
-list<PotionsNode> Market::get_potions() {
+list<PotionsNode> Market::get_potions()
+{
     return PotionsList;
 }
 
-list<SpellsNode> Market::get_spells() {
+list<SpellsNode> Market::get_spells()
+{
     return SpellsList;
 }
 
-list<WeaponNode> Market::get_weapons() {
+list<WeaponNode> Market::get_weapons()
+{
     return WeaponList;
 }
 
-list<ArmorNode> Market::get_armors() {
+list<ArmorNode> Market::get_armors()
+{
     return ArmorList;
 }
 
-Market::~Market() {
-
+Market::~Market()
+{
 }

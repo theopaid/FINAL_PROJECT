@@ -306,7 +306,7 @@ void Hero::displayStats()
 
 void Hero::displayEquipment()
 {
-    cout << getName() << "'s Equipment :" << endl;
+    cout << endl << getName() << "'s Equipment :" << endl << endl;
     if (my_equipment.hand1 == NULL)
         cout << "Left hand : Nothing Equipped" << endl;
 
