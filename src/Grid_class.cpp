@@ -11,8 +11,8 @@
 using namespace std;
 
 // Class Grid
-Grid::Grid(int _x, int _y, int _heroes_count)
-    : x(_x), y(_y), heroes_count(_heroes_count), row(_x, common), my_grid(_y, row)
+Grid::Grid(int _x, int _y)
+    : x(_x), y(_y), row(_x, common), my_grid(_y, row)
 {
     pos_x = 1;
     pos_y = 1;
@@ -289,7 +289,7 @@ void Grid::createHero()
             }
             if (!same_name)
             {
-                hero_ptr = new Paladin(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100); // All the Hero's constructor get the sameinput value,
+                hero_ptr = new Paladin(hero_name, 1, 70, 70, 0.2, 0.2, 0.2, 100, 100); // All the Hero's constructor get the same input value,
                 my_heroes.push_back(hero_ptr); // and the adjustions happen inside the constructors
             }
             else
@@ -678,7 +678,7 @@ void Grid::BuyFromMarket()
             {
                 potions_list = my_market->get_potions();
                                    i = 11;
-                for (list<PotionsNode>::iterator it = potions_list.begin(); it != potions_list.end(); ++it)
+                for (list<PotionsNode>::iterator it = potions_list.begin(); it != potions_list.end(); ++it) // Reading the elements of the list.
                 {
                     if (input == i)
                     {
@@ -702,7 +702,7 @@ void Grid::BuyFromMarket()
                         else
                             potion_ptr = new AgilityPotion((*it).name, (*it).price, (*it).base_level, (*it).boost);
                         bool added = my_heroes[hero_number]->add_inventoryItem(potion_ptr);
-                        if (added)
+                        if (added) // True is given, if the action was successful
                         {
                             my_heroes[hero_number]->setMoney(my_heroes[hero_number]->getMoney() - (*it).price);
                             cout << endl
@@ -1057,7 +1057,7 @@ void Grid::Attack(Hero *hero_ptr)
     }
     int damage;
     int onLighting_reduction = 1;
-    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0))
+    if (!((rand() % 100 + 1) <= my_monsters[monster_number]->get_dodge_possibility() * 100.0)) // If attack is not dodged
     {
         if (hero_ptr->getEquipment().hand1 != NULL && hero_ptr->getEquipment().hand2 != NULL)
             damage = (1 + hero_ptr->get_strength()) * (hero_ptr->getEquipment().hand1->get_dmg() + hero_ptr->getEquipment().hand2->get_dmg());
@@ -1112,7 +1112,7 @@ void Grid::Fight()
                 }
             }
         }
-        if (!flag_heroes_win)
+        if (!flag_heroes_win) // If fight is not over and heroes turn is completed
         {
             cout << "Now its the monsters's turn" << endl;
             for (int i = 0; i < my_monsters.size(); i++)
@@ -1154,7 +1154,7 @@ void Grid::Fight()
                 }
             }
         }
-        if (!(flag_heroes_win || flag_monsters_win))
+        if (!(flag_heroes_win || flag_monsters_win)) // If fight is not over and monsters turn is completed
         {
             for (int h = 0; h < my_monsters.size(); h++)
             {
@@ -1202,7 +1202,7 @@ void Grid::Fight()
                 }
             }
         }
-        else if (flag_monsters_win)
+        else if (flag_monsters_win) // If Monsters won
         {
             cout << "Monsters won!" << endl;
             for (int j = 0; j < my_heroes.size(); j++)
@@ -1212,7 +1212,7 @@ void Grid::Fight()
                 my_heroes[j]->setMP(70);
             }
         }
-        else if (flag_heroes_win)
+        else if (flag_heroes_win) // If Heros won
         {
             cout << "Heroes won!" << endl;
             for (int j = 0; j < my_heroes.size(); j++)

@@ -105,7 +105,7 @@ void Market::show_market()
         {
             cout << "Strength Potions you can BUY: " << endl;
 
-            cout << "           " << s << "|| Price || Level Requirement || Strength Boost " << endl;
+            cout << "          " << s << "|| Price || Level Requirement || Strength Boost " << endl;
         }
         if ((*it).type == "dexterity")
         {

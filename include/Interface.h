@@ -413,7 +413,7 @@ class Grid
     Market* my_market;
 
   public:
-    Grid(int _x, int _y, int _heroes_count);
+    Grid(int _x, int _y);
     void createMap(int, int);
     void displayMap();
     void createHero();
